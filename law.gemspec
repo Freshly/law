@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Eric Garside"]
   spec.email         = ["garside@gmail.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = "Enforce the laws of your application"
+  spec.description   = "Illegal operations take on a whole new meaning"
+  spec.homepage      = "https://www.freshly.com/"
   spec.license       = "MIT"
 
   # Specify which files should be added to the gem when it is released.
