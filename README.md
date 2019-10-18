@@ -1,6 +1,6 @@
 # Law
 
-Access policy enforcement for rails applications.
+Enforce the laws of your Rails application with highly extensible access policies.
 
 [![Gem Version](https://badge.fury.io/rb/law.svg)](https://badge.fury.io/rb/law)
 [![Build Status](https://semaphoreci.com/api/v1/freshly/law/branches/develop/badge.svg)](https://semaphoreci.com/freshly/law)

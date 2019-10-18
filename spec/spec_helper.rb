@@ -1,4 +1,19 @@
+# frozen_string_literal: true
+
 require "bundler/setup"
+require "pry"
+require "simplecov"
+
+require "timecop"
+
+require "spicerack/spec_helper"
+require "shoulda-matchers"
+
+SimpleCov.start do
+  add_filter "/spec/"
+  add_filter "/rspec/"
+end
+
 require "law"
 
 RSpec.configure do |config|
@@ -10,5 +25,16 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
+  end
+
+  config.before(:each, type: :with_frozen_time) { Timecop.freeze(Time.now.round) }
+  config.before(:each, type: :integration) { Timecop.freeze(Time.now.round) }
+
+  config.after(:each) { Timecop.return }
+end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
   end
 end
