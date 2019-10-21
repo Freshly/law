@@ -16,6 +16,7 @@ end
 
 require "law"
 
+require_relative "support/shared_context/with_an_example_permission"
 require_relative "support/shared_context/with_an_example_role"
 
 RSpec.configure do |config|
