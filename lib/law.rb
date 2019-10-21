@@ -13,4 +13,6 @@ require "law/regulation_base"
 require "law/role_base"
 require "law/actor_base"
 
+require "law/law_base"
+
 module Law; end
