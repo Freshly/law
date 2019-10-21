@@ -1,0 +1,44 @@
+# frozen_string_literal: true
+
+# A **Law** restricts actions to **Actors** by enforcing a collection of **Permissions**.
+module Law
+  module Laws
+    module Regulations
+      extend ActiveSupport::Concern
+
+      included do
+        class_attribute :regulations, instance_writer: false, default: []
+      end
+
+      class_methods do
+        def inherited(base)
+          base.regulations = regulations.dup
+          super
+        end
+
+        private
+
+        def enforce(*ordered_regulations)
+          ordered_regulations = ordered_regulations.flatten.compact
+
+          ensure_valid_regulations(ordered_regulations)
+
+          ordered_regulations.each do |regulation|
+            regulations << regulation
+            track_regulation(regulation)
+          end
+        end
+
+        def track_regulation(regulation)
+          regulation.enforced_by(self)
+        end
+
+        def ensure_valid_regulations(ordered_regulations)
+          raise ArgumentError, "a regulation is required" if ordered_regulations.empty?
+          invalid_regulations = ordered_regulations.reject { |permission| permission.respond_to?(:enforced_by) }
+          raise ArgumentError, "invalid regulations: #{invalid_regulations.join(", ")}" if invalid_regulations.present?
+        end
+      end
+    end
+  end
+end

@@ -79,8 +79,6 @@ RSpec.describe Law::Roles::Permissions, type: :concern do
 
   describe ".inherited" do
     it_behaves_like "an inherited property", :grant, :permissions do
-      before { allow(example_class).to receive(:ensure_valid_permissions) }
-
       let(:root_class) do
         Class.new(Law::RoleBase) do
           # This is a test for the values being properly inherited, validations are not required and tested elsewhere.

@@ -33,9 +33,9 @@ module Law
           permission.granted_to(self)
         end
 
-        def ensure_valid_permissions(permissions)
-          raise ArgumentError, "a permission is required" if permissions.empty?
-          invalid_permissions = permissions.reject { |permission| permission.respond_to?(:granted_to) }
+        def ensure_valid_permissions(permission_grants)
+          raise ArgumentError, "a permission is required" if permission_grants.empty?
+          invalid_permissions = permission_grants.reject { |permission| permission.respond_to?(:granted_to) }
           raise ArgumentError, "invalid permissions: #{invalid_permissions.join(", ")}" if invalid_permissions.present?
         end
       end
