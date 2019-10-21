@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_context "with an example describable object" do
-  subject(:example_describable) { example_describable_class.new }
-
-  let(:example_describable_class) do
+  subject(:example_describable_class) do
     Class.new(Law::DescribableObject).tap do |klass|
       klass.__send__(:type_name, type_name)
       klass.__send__(:desc, description)
