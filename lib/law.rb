@@ -1,4 +1,11 @@
+# frozen_string_literal: true
+
+require "active_support"
+
+require "spicerack"
+
 require "law/version"
 
-module Law
-end
+require "law/role_base"
+
+module Law; end
