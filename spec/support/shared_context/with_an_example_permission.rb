@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_context "with an example permission" do
-  subject(:example_permission) { example_permission_class.new }
-
-  let(:example_permission_class) do
+  subject(:example_permission_class) do
     Class.new(Law::PermissionBase).tap { |klass| klass.__send__(:desc, description) }
   end
 

@@ -7,8 +7,6 @@ module Law
 
     dsl_accessor :desc
 
-    delegate :key, :description, to: :class
-
     class << self
       def key
         name.chomp(@type_name).underscore.to_sym
