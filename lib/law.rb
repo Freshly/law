@@ -8,5 +8,6 @@ require "law/version"
 
 require "law/permission_base"
 require "law/role_base"
+require "law/actor_base"
 
 module Law; end

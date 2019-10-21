@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# A **Permission** is the "key" that fits the "lock" of a regulation.
+# A **Permission** is the "key" that fits the "lock" of a **Regulation**.
 module Law
   class PermissionBase < Spicerack::RootObject
     include Tablesalt::DSLAccessor

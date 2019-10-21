@@ -18,6 +18,7 @@ require "law"
 
 require_relative "support/shared_context/with_an_example_permission"
 require_relative "support/shared_context/with_an_example_role"
+require_relative "support/shared_context/with_an_example_actor"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
