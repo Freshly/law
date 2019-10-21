@@ -16,6 +16,8 @@ end
 
 require "law"
 
+require_relative "../lib/spec_helper"
+
 require_relative "support/shared_context/with_an_example_describable_object"
 require_relative "support/shared_context/with_an_example_permission"
 require_relative "support/shared_context/with_an_example_regulation"
@@ -24,6 +26,8 @@ require_relative "support/shared_context/with_an_example_role"
 require_relative "support/shared_context/with_an_example_actor"
 
 require_relative "support/shared_example/a_describable_object"
+
+require_relative "support/test_classes/do_anything_permission"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
