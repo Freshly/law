@@ -10,11 +10,11 @@
 #       grants ExamplePermission
 #     end
 #
-#     RSpec.describe ExamplePermission do
-#       it { is_expected.to include_roles ExampleRole }
+#     RSpec.describe ExamplePermission, type: :permission do
+#       it { is_expected.to be_granted_to ExampleRole }
 #     end
 
-RSpec::Matchers.define :include_roles do |*roles|
+RSpec::Matchers.define :be_granted_to do |*roles|
   match { expect(test_subject.roles).to include *Array.wrap(roles).flatten }
   description { "include roles #{Array.wrap(roles).flatten}" }
   failure_message { "expected #{test_subject} to include roles #{Array.wrap(roles).flatten}" }

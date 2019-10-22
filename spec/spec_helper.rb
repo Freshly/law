@@ -29,7 +29,14 @@ require_relative "support/shared_context/with_an_example_law"
 
 require_relative "support/shared_example/a_describable_object"
 
+require_relative "support/test_classes/do_anything_regulation"
+require_relative "support/test_classes/administrative_regulation"
+require_relative "support/test_classes/admin_index_law"
+
 require_relative "support/test_classes/do_anything_permission"
+require_relative "support/test_classes/administrative_permission"
+require_relative "support/test_classes/super_admin_role"
+require_relative "support/test_classes/admin_role"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

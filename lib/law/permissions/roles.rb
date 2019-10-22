@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# A **Permission** is granted to various **Roles** to allow them to actions.
+# A **Permission** is granted to various **Roles** to authorize **Actors** to perform actions.
 module Law
   module Permissions
     module Roles

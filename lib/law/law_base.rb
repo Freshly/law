@@ -2,9 +2,11 @@
 
 require_relative "laws/regulations"
 
-# A **Law** is a collection of **Regulations**.
+# A **Law** restricts actions to **Actors** by enforcing a collection of **Permissions**.
 module Law
-  class LawBase < Spicerack::RootObject
+  class LawBase < DescribableObject
     include Law::Laws::Regulations
+
+    type_name "Law"
   end
 end

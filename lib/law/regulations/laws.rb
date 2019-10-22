@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# A **Regulation ** is enforced by various **Laws** to allow restrict actions.
+# A **Regulation** is imposed by various **Laws** to restrict **Actors** from perform actions.
 module Law
   module Regulations
     module Laws
@@ -16,7 +16,7 @@ module Law
           super
         end
 
-        def enforced_by(law)
+        def imposed_by(law)
           laws << law
         end
       end
