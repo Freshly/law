@@ -13,8 +13,8 @@ module Law
         memoize :permissions_map
       end
 
-      def permitted_to?(key)
-        permissions_map.key?(key) || permissions.include?(key)
+      def permitted_to?(object)
+        permissions_map.key?(object.try(:key)) || permissions_map.key?(object) || permissions.include?(object)
       end
 
       def permissions_map

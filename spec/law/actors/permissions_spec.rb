@@ -67,19 +67,25 @@ RSpec.describe Law::Actors::Permissions, type: :concern do
   describe "#permitted_to?" do
     include_context "with roles and permissions"
 
-    subject { example_actor.permitted_to?(permission) }
+    subject { example_actor.permitted_to?(object) }
 
     let(:roles) { role0 }
 
     context "without permission" do
       context "when class" do
-        let(:permission) { permission2 }
+        let(:object) { permission2 }
 
         it { is_expected.to eq false }
       end
 
       context "when key" do
-        let(:permission) { permission2.key }
+        let(:object) { permission2.key }
+
+        it { is_expected.to eq false }
+      end
+
+      context "when regulation" do
+        let(:object) { double(key: permission2.key) }
 
         it { is_expected.to eq false }
       end
@@ -87,13 +93,19 @@ RSpec.describe Law::Actors::Permissions, type: :concern do
 
     context "with permission" do
       context "when class" do
-        let(:permission) { permission0 }
+        let(:object) { permission0 }
 
         it { is_expected.to eq true }
       end
 
       context "when key" do
-        let(:permission) { permission0.key }
+        let(:object) { permission0.key }
+
+        it { is_expected.to eq true }
+      end
+
+      context "when regulation" do
+        let(:object) { double(key: permission0.key) }
 
         it { is_expected.to eq true }
       end

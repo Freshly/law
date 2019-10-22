@@ -38,6 +38,8 @@ module Law
     end
 
     def judge!
+      return true if law.unregulated?
+
       raise InjunctionError unless applicable_regulations.present?
 
       # TODO loop over applicable regulations, which should be InputModels that can run validations.

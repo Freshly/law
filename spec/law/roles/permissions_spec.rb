@@ -3,6 +3,8 @@
 RSpec.describe Law::Roles::Permissions, type: :concern do
   include_context "with an example role"
 
+  it { is_expected.to delegate_method(:unpermitted?).to(:class) }
+
   describe ".grant" do
     subject(:grant) { example_role_class.__send__(:grant, input) }
 
@@ -86,6 +88,18 @@ RSpec.describe Law::Roles::Permissions, type: :concern do
           def self.track_permission(*); end
         end
       end
+    end
+  end
+
+  describe ".unpermitted?" do
+    context "with permissions" do
+      before { example_role_class.__send__(:grant, Class.new(Law::PermissionBase)) }
+
+      it { is_expected.not_to be_unpermitted }
+    end
+
+    context "without permissions" do
+      it { is_expected.to be_unpermitted }
     end
   end
 end
