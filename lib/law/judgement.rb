@@ -2,32 +2,23 @@
 
 # A **Judgement** determines if an **Actor** (representing a set of **Roles**) are in violation of the given **Law**.
 module Law
-  class Judgement < Spicerack::InputModel
-    argument :actor, allow_nil: false
-    argument :law, allow_nil: false
-
+  class Judgement < Spicerack::RootObject
     class << self
-      def judge!(law:, **options)
-        for_law(law, **options).judge!
+      def judge!(petition)
+        new(petition).judge!
       end
 
-      def judge(law:, **options)
-        for_law(law, **options).judge
+      def judge(petition)
+        new(petition).judge
       end
+    end
 
-      def for_law(law, actor: nil, roles: nil)
-        raise ArgumentError, "provide either actor or roles, not both!" if actor.present? && roles.present?
-        new(actor: resolve_actor(actor, roles), law: law)
-      end
+    attr_reader :petition
 
-      private
+    delegate :law, :applicable_regulations, to: :petition
 
-      def resolve_actor(actor, roles)
-        actor ||= Law::ActorBase.new(roles: roles) if roles.present?
-        raise ArgumentError, "an actor or roles are required!" unless actor.present?
-
-        actor
-      end
+    def initialize(petition)
+      @petition = petition
     end
 
     def judge
@@ -46,12 +37,5 @@ module Law
 
       true
     end
-
-    private
-
-    def applicable_regulations
-      law.regulations.select(&actor.method(:permitted_to?))
-    end
-    memoize :applicable_regulations
   end
 end
