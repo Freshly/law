@@ -5,11 +5,11 @@ RSpec.describe Law do
     expect(Law::VERSION).not_to be_nil
   end
 
-  describe described_class::AccessDeniedError do
+  describe described_class::NotAuthorizedError do
     it { is_expected.to inherit_from StandardError }
   end
 
   describe described_class::InjunctionError do
-    it { is_expected.to inherit_from Law::AccessDeniedError }
+    it { is_expected.to inherit_from Law::NotAuthorizedError }
   end
 end

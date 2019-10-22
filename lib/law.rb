@@ -16,9 +16,9 @@ require "law/actor_base"
 
 require "law/law_base"
 
-require "law/judge"
+require "law/judgement"
 
 module Law
-  class AccessDeniedError < StandardError; end
-  class InjunctionError < AccessDeniedError; end
+  class NotAuthorizedError < StandardError; end
+  class InjunctionError < NotAuthorizedError; end
 end
