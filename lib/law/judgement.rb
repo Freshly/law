@@ -16,13 +16,13 @@ module Law
       end
 
       def for_law(law, actor: nil, roles: nil)
+        raise ArgumentError, "provide either actor or roles, not both!" if actor.present? && roles.present?
         new(actor: resolve_actor(actor, roles), law: law)
       end
 
       private
 
       def resolve_actor(actor, roles)
-        raise ArgumentError, "provide either actor or roles, not both!" if actor.present? && roles.present?
         actor ||= Law::ActorBase.new(roles: roles) if roles.present?
         raise ArgumentError, "an actor or roles are required!" unless actor.present?
 
