@@ -5,29 +5,6 @@ RSpec.describe Law::Actors::Permissions, type: :concern do
 
   it { is_expected.to define_argument :roles, allow_nil: false }
 
-  shared_context "with roles and permissions" do
-    let(:permission0) { Class.new(Law::PermissionBase) }
-    let(:permission1) { Class.new(Law::PermissionBase) }
-    let(:permission2) { Class.new(Law::PermissionBase) }
-
-    let(:permission0_name) { Faker::Internet.domain_word.capitalize }
-    let(:permission1_name) { "#{permission0_name}x" }
-    let(:permission2_name) { "#{permission0_name}y" }
-
-    let(:role0) do
-      Class.new(Law::RoleBase).tap { |klass| klass.__send__(:grant, permission0, permission1) }
-    end
-    let(:role1) do
-      Class.new(Law::RoleBase).tap { |klass| klass.__send__(:grant, permission1, permission2) }
-    end
-
-    before do
-      stub_const(permission0_name, permission0)
-      stub_const(permission1_name, permission1)
-      stub_const(permission2_name, permission2)
-    end
-  end
-
   describe "#permissions" do
     include_context "with roles and permissions"
 

@@ -16,6 +16,7 @@ require "law/actor_base"
 
 require "law/law_base"
 
+require "law/petition"
 require "law/judgement"
 
 module Law

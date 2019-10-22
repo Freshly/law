@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Law::Judgement, type: :integration do
-  subject { described_class.judge(law: law, roles: roles) }
+  include_context "with an example petition"
+
+  subject { described_class.judge(example_petition) }
 
   shared_examples_for "an enforced law" do
     context "when guest" do
