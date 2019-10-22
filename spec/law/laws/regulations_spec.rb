@@ -3,6 +3,8 @@
 RSpec.describe Law::Laws::Regulations, type: :concern do
   include_context "with an example law"
 
+  it { is_expected.to delegate_method(:unregulated?).to(:class) }
+
   describe ".impose" do
     subject(:impose) { example_law_class.__send__(:impose, input) }
 
@@ -86,6 +88,18 @@ RSpec.describe Law::Laws::Regulations, type: :concern do
           def self.track_regulation(*); end
         end
       end
+    end
+  end
+
+  describe ".unregulated?" do
+    context "with regulations" do
+      before { example_law_class.__send__(:impose, Class.new(Law::RegulationBase)) }
+
+      it { is_expected.not_to be_unregulated }
+    end
+
+    context "without regulations" do
+      it { is_expected.to be_unregulated }
     end
   end
 end

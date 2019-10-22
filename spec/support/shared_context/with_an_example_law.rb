@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.shared_context "with an example law" do
-  subject(:example_law_class) do
+  subject(:example_law) { example_law_class.new }
+
+  let(:example_law_class) do
     Class.new(Law::LawBase).tap { |klass| klass.__send__(:desc, description) }
   end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SuperAdminRole < Law::RoleBase
+class SuperAdminRole < AdminRole
   desc "Root Access"
 
   grant DoAnythingPermission

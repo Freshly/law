@@ -120,7 +120,7 @@ RSpec.describe Law::Judgement, type: :judgement do
     let(:example_judgement) { described_class.new(law: law, actor: actor) }
     let(:regulation) { double }
     let(:regulations) { [ regulation ] }
-    let(:law) { double(regulations: regulations) }
+    let(:law) { double(unregulated?: false, regulations: regulations) }
 
     context "when nothing permitted" do
       let(:actor) { double(permitted_to?: false) }

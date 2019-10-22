@@ -8,9 +8,14 @@ module Law
 
       included do
         class_attribute :regulations, instance_writer: false, default: []
+        delegate :unregulated?, to: :class
       end
 
       class_methods do
+        def unregulated?
+          regulations.empty?
+        end
+
         def inherited(base)
           base.regulations = regulations.dup
           super

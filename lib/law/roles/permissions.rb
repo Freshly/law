@@ -8,9 +8,14 @@ module Law
 
       included do
         class_attribute :permissions, instance_writer: false, default: []
+        delegate :unpermitted?, to: :class
       end
 
       class_methods do
+        def unpermitted?
+          permissions.blank?
+        end
+
         def inherited(base)
           base.permissions = permissions.dup
           super
