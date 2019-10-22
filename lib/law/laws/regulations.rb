@@ -18,24 +18,24 @@ module Law
 
         private
 
-        def enforce(*ordered_regulations)
-          ordered_regulations = ordered_regulations.flatten.compact
+        def impose(*imposed_regulations)
+          imposed_regulations = imposed_regulations.flatten.compact
 
-          ensure_valid_regulations(ordered_regulations)
+          ensure_valid_regulations(imposed_regulations)
 
-          ordered_regulations.each do |regulation|
+          imposed_regulations.each do |regulation|
             regulations << regulation
             track_regulation(regulation)
           end
         end
 
         def track_regulation(regulation)
-          regulation.enforced_by(self)
+          regulation.imposed_by(self)
         end
 
-        def ensure_valid_regulations(ordered_regulations)
-          raise ArgumentError, "a regulation is required" if ordered_regulations.empty?
-          invalid_regulations = ordered_regulations.reject { |permission| permission.respond_to?(:enforced_by) }
+        def ensure_valid_regulations(imposed_regulations)
+          raise ArgumentError, "a regulation is required" if imposed_regulations.empty?
+          invalid_regulations = imposed_regulations.reject { |permission| permission.respond_to?(:imposed_by) }
           raise ArgumentError, "invalid regulations: #{invalid_regulations.join(", ")}" if invalid_regulations.present?
         end
       end

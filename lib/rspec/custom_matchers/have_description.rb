@@ -19,10 +19,20 @@
 #     end
 
 RSpec::Matchers.define :have_description do |description|
-  match { expect(test_subject.description).to eq description }
+  match { expect(actual_description).to eq description }
   description { "have description #{description}" }
-  failure_message { "expected #{test_subject} to have description #{description}" }
+  failure_message do
+    "expected #{test_subject} to have description '#{description}'#{" but had '#{actual_description}'" if actual?}"
+  end
   failure_message_when_negated { "expected #{test_subject} not to have description #{description}" }
+
+  def actual?
+    actual_description.present?
+  end
+
+  def actual_description
+    test_subject.description
+  end
 
   def test_subject
     subject.is_a?(Class) ? subject : subject.class

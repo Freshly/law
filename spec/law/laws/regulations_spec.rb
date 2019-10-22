@@ -3,24 +3,24 @@
 RSpec.describe Law::Laws::Regulations, type: :concern do
   include_context "with an example law"
 
-  describe ".enforce" do
-    subject(:enforce) { example_law_class.__send__(:enforce, input) }
+  describe ".impose" do
+    subject(:impose) { example_law_class.__send__(:impose, input) }
 
     let(:valid_regulation) do
       Class.new do
-        def self.enforced_by(*); end
+        def self.imposed_by(*); end
       end
     end
 
-    before { allow(valid_regulation).to receive(:enforced_by) }
+    before { allow(valid_regulation).to receive(:imposed_by) }
 
     context "with one" do
       context "when valid" do
         let(:input) { valid_regulation }
 
         it "is assigned" do
-          expect { enforce }.to change { example_law_class.regulations }.from([]).to([ input ])
-          expect(valid_regulation).to have_received(:enforced_by).with(example_law_class)
+          expect { impose }.to change { example_law_class.regulations }.from([]).to([ input ])
+          expect(valid_regulation).to have_received(:imposed_by).with(example_law_class)
         end
       end
 
@@ -28,7 +28,7 @@ RSpec.describe Law::Laws::Regulations, type: :concern do
         let(:input) { nil }
 
         it "is raises" do
-          expect { enforce }.to raise_error ArgumentError, "a regulation is required"
+          expect { impose }.to raise_error ArgumentError, "a regulation is required"
         end
       end
 
@@ -36,7 +36,7 @@ RSpec.describe Law::Laws::Regulations, type: :concern do
         let(:input) { Faker::Lorem.word }
 
         it "is raises" do
-          expect { enforce }.to raise_error ArgumentError, "invalid regulations: #{input}"
+          expect { impose }.to raise_error ArgumentError, "invalid regulations: #{input}"
         end
       end
     end
@@ -49,8 +49,8 @@ RSpec.describe Law::Laws::Regulations, type: :concern do
         end
 
         it "is assigned" do
-          expect { enforce }.to change { example_law_class.regulations }.from([]).to(input)
-          expect(valid_regulation).to have_received(:enforced_by).with(example_law_class).exactly(3).times
+          expect { impose }.to change { example_law_class.regulations }.from([]).to(input)
+          expect(valid_regulation).to have_received(:imposed_by).with(example_law_class).exactly(3).times
         end
       end
 
@@ -60,7 +60,7 @@ RSpec.describe Law::Laws::Regulations, type: :concern do
         let(:invalid_regulation) { Faker::Lorem.word }
 
         it "is raises" do
-          expect { enforce }.to raise_error ArgumentError, "invalid regulations: #{invalid_regulation}"
+          expect { impose }.to raise_error ArgumentError, "invalid regulations: #{invalid_regulation}"
         end
       end
 
@@ -71,14 +71,14 @@ RSpec.describe Law::Laws::Regulations, type: :concern do
         let(:invalid_regulation1) { SecureRandom.hex }
 
         it "is raises" do
-          expect { enforce }.to raise_error ArgumentError, "invalid regulations: #{input.join(", ")}"
+          expect { impose }.to raise_error ArgumentError, "invalid regulations: #{input.join(", ")}"
         end
       end
     end
   end
 
   describe ".inherited" do
-    it_behaves_like "an inherited property", :enforce, :regulations do
+    it_behaves_like "an inherited property", :impose, :regulations do
       let(:root_class) do
         Class.new(Law::LawBase) do
           # This is a test for the values being properly inherited, validations are not required and tested elsewhere.
