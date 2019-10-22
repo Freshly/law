@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# A **Law** restricts actions to **Actors** by enforcing a collection of **Permissions**.
+# A **Law** is a collection of imposed **Regulations**.
 module Law
   module Laws
     module Regulations

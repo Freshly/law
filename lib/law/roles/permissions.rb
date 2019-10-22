@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# A **Role** is authorized to take actions by virtue of having the appropriate **Permissions**.
+# A **Role** is a collection of granted **Permissions**.
 module Law
   module Roles
     module Permissions

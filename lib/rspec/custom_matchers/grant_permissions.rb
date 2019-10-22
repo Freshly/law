@@ -15,7 +15,7 @@
 #     end
 
 RSpec::Matchers.define :grant_permissions do |*permissions|
-  match { expect(test_subject.permissions).to match_array *Array.wrap(permissions).flatten }
+  match { expect(test_subject.permissions).to match_array Array.wrap(permissions).flatten }
   description { "have permissions #{Array.wrap(permissions).flatten}" }
   failure_message { "expected #{test_subject} to have permissions #{Array.wrap(permissions).flatten}" }
   failure_message_when_negated { "expected #{test_subject} not to have permissions #{Array.wrap(permissions).flatten}" }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# A **Regulation** is imposed by various **Laws** to restrict actions.
+# A **Regulation** is imposed by various **Laws** to restrict **Actors** from perform actions.
 module Law
   module Regulations
     module Laws
