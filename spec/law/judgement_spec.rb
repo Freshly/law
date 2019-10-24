@@ -26,13 +26,6 @@ RSpec.describe Law::Judgement, type: :judgement do
     end
   end
 
-  describe "#errors" do
-    subject { example_judgement.errors }
-
-    it { is_expected.to be_a_kind_of ActiveModel::Errors }
-    it { is_expected.to be_empty }
-  end
-
   describe ".judge!" do
     it_behaves_like "a class pass method", :judge!
   end
