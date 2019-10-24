@@ -2,7 +2,7 @@
 
 # A **Petition** is used to determine if an action would violate a given **Law** using a **Judgement**.
 module Law
-  class Petition < Spicerack::InputModel
+  class Petition < Spicerack::InputObject
     argument :law, allow_nil: false
     option :source
     option :roles, default: []

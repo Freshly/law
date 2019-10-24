@@ -13,12 +13,18 @@ module Law
       end
     end
 
-    attr_reader :petition
+    attr_reader :petition, :violations, :applied_regulations
 
     delegate :law, :applicable_regulations, to: :petition
 
     def initialize(petition)
       @petition = petition
+      @violations = []
+      @applied_regulations = []
+    end
+
+    def authorized?
+      violations.blank?
     end
 
     def judge
@@ -31,11 +37,13 @@ module Law
     def judge!
       return true if law.unregulated?
 
-      raise InjunctionError unless applicable_regulations.present?
+      raise InjunctionError if applicable_regulations.blank?
+      raise AlreadyJudgedError if applied_regulations.present?
 
-      # TODO loop over applicable regulations, which should be InputModels that can run validations.
+      @applied_regulations = applicable_regulations.map { |regulation| regulation.new(petition: petition) }
+      @violations = applied_regulations.reject(&:valid?)
 
-      true
+      authorized?
     end
   end
 end
