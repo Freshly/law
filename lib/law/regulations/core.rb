@@ -12,8 +12,9 @@ module Law
 
       private
 
-      def respond_to_missing?(method_name)
-        delegation_type(*petition_delegator_for_method_name(method_name)) != :none
+      def respond_to_missing?(method_name, include_private = false)
+        petition_delegate, delegated_method_name = petition_delegator_for_method_name(method_name)
+        delegation_type(petition_delegate, delegated_method_name) != :none || super
       end
 
       def method_missing(method_name, *arguments)
