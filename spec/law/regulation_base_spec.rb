@@ -8,6 +8,7 @@ RSpec.describe Law::RegulationBase, type: :regulation do
   it { is_expected.to include_module Law::Describable }
 
   it { is_expected.to include_module Law::Regulations::Laws }
+  it { is_expected.to include_module Law::Regulations::Core }
 
   it_behaves_like "a describable object" do
     let(:example_class) { example_regulation_class }
