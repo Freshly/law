@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class AdminRole < UserRole
+class AdminRole < Law::RoleBase
   desc "General System Administrator"
 
-  grant AdministrativePermission
+  grant AdministrativePermission, AuthenticationPermission
 end

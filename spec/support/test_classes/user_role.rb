@@ -3,5 +3,5 @@
 class UserRole < Law::RoleBase
   desc "Signed In User Access"
 
-  grant AuthenticationPermission
+  grant AuthenticationPermission, OwnerPermission
 end

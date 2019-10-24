@@ -21,6 +21,8 @@ module Law
         petition_delegate, delegated_method_name = petition_delegator_for_method_name(method_name)
 
         case delegation_type(petition_delegate, delegated_method_name)
+        when :delegate
+          petition_delegate
         when :method
           petition_delegate.public_send(delegated_method_name, *arguments)
         when :attribute_sym
@@ -32,8 +34,11 @@ module Law
         end
       end
 
+      # rubocop:disable Metrics/PerceivedComplexity
+      # rubocop:disable Metrics/CyclomaticComplexity
       def delegation_type(petition_delegate, delegated_method_name)
         unless petition_delegate.nil?
+          return :delegate if delegated_method_name.blank?
           return :method if petition_delegate.respond_to?(delegated_method_name)
 
           if petition_delegate.respond_to?(:key?)
@@ -44,6 +49,8 @@ module Law
 
         :none
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
+      # rubocop:enable Metrics/PerceivedComplexity
 
       def petition_delegator_for_method_name(method_name)
         parts = method_name.to_s.split("_")
