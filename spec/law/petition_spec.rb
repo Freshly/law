@@ -3,7 +3,7 @@
 RSpec.describe Law::Petition, type: :petition do
   include_context "with an example petition"
 
-  it { is_expected.to inherit_from Spicerack::InputModel }
+  it { is_expected.to inherit_from Spicerack::InputObject }
 
   describe "#actor" do
     subject(:actor) { example_petition.actor }

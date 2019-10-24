@@ -1,9 +1,37 @@
 # frozen_string_literal: true
 
 RSpec.describe Law::Judgement, type: :judgement do
-  subject { described_class }
+  subject(:example_judgement) { described_class.new(petition) }
+
+  let(:petition) { instance_double(Law::Petition, law: law) }
+  let(:law) { instance_double(Law::LawBase, unregulated?: unregulated?) }
+  let(:unregulated?) { true }
 
   it { is_expected.to inherit_from Spicerack::RootObject }
+
+  it { is_expected.to delegate_method(:law).to(:petition) }
+  it { is_expected.to delegate_method(:applicable_regulations).to(:petition) }
+
+  describe "#authorized?" do
+    subject { example_judgement }
+
+    context "without violations" do
+      it { is_expected.to be_authorized }
+    end
+
+    context "with violations" do
+      before { allow(example_judgement).to receive(:violations).and_return([ instance_double(Law::RegulationBase) ]) }
+
+      it { is_expected.not_to be_authorized }
+    end
+  end
+
+  describe "#errors" do
+    subject { example_judgement.errors }
+
+    it { is_expected.to be_a_kind_of ActiveModel::Errors }
+    it { is_expected.to be_empty }
+  end
 
   describe ".judge!" do
     it_behaves_like "a class pass method", :judge!
@@ -15,10 +43,6 @@ RSpec.describe Law::Judgement, type: :judgement do
 
   describe "#judge" do
     subject(:judge) { example_judgement.judge }
-
-    let(:example_judgement) { described_class.new(petition) }
-
-    let(:petition) { double }
 
     context "with StandardError" do
       before { allow(example_judgement).to receive(:judge!).and_raise(StandardError) }
@@ -52,11 +76,9 @@ RSpec.describe Law::Judgement, type: :judgement do
   describe "#judge!" do
     subject(:judge!) { example_judgement.judge! }
 
-    let(:example_judgement) { described_class.new(petition) }
-    let(:petition) { double(applicable_regulations: applicable_regulations, law: law) }
+    before { allow(petition).to receive(:applicable_regulations).and_return(applicable_regulations) }
+
     let(:applicable_regulations) { [] }
-    let(:regulation) { double }
-    let(:law) { double(unregulated?: unregulated?) }
 
     context "when unregulated" do
       let(:unregulated?) { true }
@@ -67,16 +89,76 @@ RSpec.describe Law::Judgement, type: :judgement do
     context "when regulated" do
       let(:unregulated?) { false }
 
-      context "when nothing permitted" do
+      context "without applicable regulations" do
         it "raises" do
           expect { judge! }.to raise_error Law::InjunctionError
         end
       end
 
-      context "when anything permitted" do
-        let(:applicable_regulations) { [ regulation ] }
+      context "with applicable regulations" do
+        let(:applicable_regulations) { [ regulation0_class, regulation1_class ] }
 
-        it { is_expected.to eq true }
+        let(:regulation0_class) { Class.new(Law::RegulationBase) }
+        let(:regulation0_instance) { instance_double(regulation0_class, valid?: regulation0_valid?) }
+
+        let(:regulation1_class) { Class.new(Law::RegulationBase) }
+        let(:regulation1_instance) { instance_double(regulation1_class, valid?: regulation1_valid?) }
+
+        let(:expected_applied_regulations) { [ regulation0_instance, regulation1_instance ] }
+        let(:expected_violations) { [] }
+
+        before do
+          allow(regulation0_class).to receive(:new).with(petition: petition).and_return(regulation0_instance)
+          allow(regulation1_class).to receive(:new).with(petition: petition).and_return(regulation1_instance)
+        end
+
+        shared_examples_for "regulations are applied" do
+          it "changes applied_regulations" do
+            expect { judge! }.
+              to change { example_judgement.applied_regulations }.from([]).to(expected_applied_regulations)
+          end
+        end
+
+        shared_examples_for "violations are tracked" do
+          it "has violations" do
+            expect { judge! }.to change { example_judgement.violations }.from([]).to(expected_violations)
+          end
+        end
+
+        context "when no regulations are invalid" do
+          let(:regulation0_valid?) { true }
+          let(:regulation1_valid?) { true }
+
+          it { is_expected.to eq true }
+
+          it_behaves_like "regulations are applied"
+
+          it "has no violations" do
+            expect { judge! }.not_to change { example_judgement.violations }.from(expected_violations)
+          end
+        end
+
+        context "when one regulations are invalid" do
+          let(:regulation0_valid?) { true }
+          let(:regulation1_valid?) { false }
+          let(:expected_violations) { [ regulation1_instance ] }
+
+          it { is_expected.to eq false }
+
+          it_behaves_like "regulations are applied"
+          it_behaves_like "violations are tracked"
+        end
+
+        context "when many regulations are invalid" do
+          let(:regulation0_valid?) { false }
+          let(:regulation1_valid?) { false }
+          let(:expected_violations) { [ regulation0_instance, regulation1_instance ] }
+
+          it { is_expected.to eq false }
+
+          it_behaves_like "regulations are applied"
+          it_behaves_like "violations are tracked"
+        end
       end
     end
   end

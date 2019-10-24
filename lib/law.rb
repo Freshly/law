@@ -22,6 +22,10 @@ require "law/petition"
 require "law/judgement"
 
 module Law
-  class NotAuthorizedError < StandardError; end
+  class Error < StandardError; end
+
+  class AlreadyJudgedError < Error; end
+
+  class NotAuthorizedError < Error; end
   class InjunctionError < NotAuthorizedError; end
 end
