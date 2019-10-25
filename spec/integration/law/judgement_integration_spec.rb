@@ -6,25 +6,37 @@ RSpec.describe Law::Judgement, type: :integration do
   subject(:judge) { described_class.judge(example_petition) }
 
   shared_examples_for "an enforced law" do
-    context "when guest" do
+    context "with GuestRole" do
       let(:roles) { GuestRole }
 
       it { is_expected.to eq guest? }
     end
 
-    context "when user" do
+    context "with UserRole" do
       let(:roles) { UserRole }
 
       it { is_expected.to eq user? }
     end
 
-    context "when admin" do
+    context "with AdminRole" do
       let(:roles) { AdminRole }
 
       it { is_expected.to eq admin? }
     end
 
-    context "when super admin" do
+    context "with MarketingManagerRole" do
+      let(:roles) { MarketingManagerRole }
+
+      it { is_expected.to eq marketing_manager? }
+    end
+
+    context "with MarketingExecutiveRole" do
+      let(:roles) { MarketingExecutiveRole }
+
+      it { is_expected.to eq marketing_executive? }
+    end
+
+    context "with SuperAdminRole" do
       let(:roles) { SuperAdminRole }
 
       it { is_expected.to eq super_admin? }
@@ -38,6 +50,8 @@ RSpec.describe Law::Judgement, type: :integration do
       let(:guest?) { true }
       let(:user?) { true }
       let(:admin?) { true }
+      let(:marketing_manager?) { true }
+      let(:marketing_executive?) { true }
       let(:super_admin?) { true }
     end
   end
@@ -49,6 +63,8 @@ RSpec.describe Law::Judgement, type: :integration do
       let(:guest?) { false }
       let(:user?) { false }
       let(:admin?) { false }
+      let(:marketing_manager?) { false }
+      let(:marketing_executive?) { false }
       let(:super_admin?) { true }
     end
   end
@@ -60,6 +76,8 @@ RSpec.describe Law::Judgement, type: :integration do
       let(:guest?) { false }
       let(:user?) { true }
       let(:admin?) { true }
+      let(:marketing_manager?) { true }
+      let(:marketing_executive?) { true }
       let(:super_admin?) { true }
     end
   end
@@ -71,6 +89,8 @@ RSpec.describe Law::Judgement, type: :integration do
       let(:guest?) { false }
       let(:user?) { false }
       let(:admin?) { true }
+      let(:marketing_manager?) { true }
+      let(:marketing_executive?) { true }
       let(:super_admin?) { true }
     end
   end
@@ -110,10 +130,16 @@ RSpec.describe Law::Judgement, type: :integration do
         end
       end
 
+      describe "Errors" do
+        it "needs specs"
+      end
+
       it_behaves_like "an enforced law" do
         let(:guest?) { false }
         let(:user?) { true }
         let(:admin?) { true }
+        let(:marketing_manager?) { true }
+        let(:marketing_executive?) { true }
         let(:super_admin?) { true }
       end
     end
@@ -125,12 +151,37 @@ RSpec.describe Law::Judgement, type: :integration do
         end
       end
 
+      describe "Errors" do
+        it "needs specs"
+      end
+
       it_behaves_like "an enforced law" do
         let(:guest?) { false }
         let(:user?) { false }
         let(:admin?) { true }
+        let(:marketing_manager?) { true }
+        let(:marketing_executive?) { true }
         let(:super_admin?) { true }
       end
     end
+  end
+
+  context "with CreateDiscountLaw" do
+    let(:law) { CreateDiscountLaw }
+
+    describe "Errors" do
+      it "needs specs"
+    end
+
+    it "needs context and specs"
+
+    # it_behaves_like "an enforced law" do
+    #   let(:guest?) { false }
+    #   let(:user?) { false }
+    #   let(:admin?) { false }
+    #   let(:marketing_manager?) { true }
+    #   let(:marketing_executive?) { true }
+    #   let(:super_admin?) { true }
+    # end
   end
 end

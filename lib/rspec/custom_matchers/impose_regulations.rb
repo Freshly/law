@@ -15,7 +15,7 @@
 #     end
 
 RSpec::Matchers.define :impose_regulations do |*regulations|
-  match { expect(test_subject.regulations).to match_array Array.wrap(regulations).flatten }
+  match { expect(test_subject.regulations).to include *Array.wrap(regulations).flatten }
   description { "impose regulations #{Array.wrap(regulations).flatten}" }
   failure_message do
     "expected #{test_subject} to impose regulations #{Array.wrap(regulations).flatten}; #{test_subject.regulations}"
