@@ -17,8 +17,12 @@
 RSpec::Matchers.define :be_granted_to do |*roles|
   match { expect(test_subject.roles).to include *Array.wrap(roles).flatten }
   description { "include roles #{Array.wrap(roles).flatten}" }
-  failure_message { "expected #{test_subject} to include roles #{Array.wrap(roles).flatten}" }
-  failure_message_when_negated { "expected #{test_subject} not to include roles #{Array.wrap(roles).flatten}" }
+  failure_message do
+    "expected #{test_subject} to include roles #{Array.wrap(roles).flatten}; #{test_subject.roles}"
+  end
+  failure_message_when_negated do
+    "expected #{test_subject} not to include roles #{Array.wrap(roles).flatten}; #{test_subject.roles}"
+  end
 
   def test_subject
     subject.is_a?(Class) ? subject : subject.class

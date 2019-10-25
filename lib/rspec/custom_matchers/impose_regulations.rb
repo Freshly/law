@@ -17,9 +17,11 @@
 RSpec::Matchers.define :impose_regulations do |*regulations|
   match { expect(test_subject.regulations).to match_array Array.wrap(regulations).flatten }
   description { "impose regulations #{Array.wrap(regulations).flatten}" }
-  failure_message { "expected #{test_subject} to impose regulations #{Array.wrap(regulations).flatten}" }
+  failure_message do
+    "expected #{test_subject} to impose regulations #{Array.wrap(regulations).flatten}; #{test_subject.regulations}"
+  end
   failure_message_when_negated do
-    "expected #{test_subject} not to impose regulations #{Array.wrap(regulations).flatten}"
+    "expected #{test_subject} not to impose regulations #{Array.wrap(regulations).flatten}; #{test_subject.regulations}"
   end
 
   def test_subject
