@@ -7,4 +7,8 @@ RSpec.describe OwnerRegulation, type: :regulation do
   it { is_expected.to have_description "Restriction requiring the current actor to own the object being modified." }
 
   it { is_expected.to be_imposed_by OwnerLaw }
+
+  describe "#must_own_target" do
+    it "needs specs"
+  end
 end
