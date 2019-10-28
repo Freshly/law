@@ -12,7 +12,6 @@ RSpec.describe DiscountManagerRegulation, type: :regulation do
   end
 
   it { is_expected.to inherit_from Law::RegulationBase }
-  it { is_expected.to have_description "Restriction with limitations on the terms and conditions of discounts." }
 
   it { is_expected.to be_imposed_by CreateDiscountLaw }
 

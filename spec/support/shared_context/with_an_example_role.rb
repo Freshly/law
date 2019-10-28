@@ -3,11 +3,7 @@
 RSpec.shared_context "with an example role" do
   subject(:example_role) { example_role_class.new }
 
-  let(:example_role_class) do
-    Class.new(Law::RoleBase).tap { |klass| klass.__send__(:desc, description) }
-  end
-
-  let(:description) { Faker::Lorem.sentence }
+  let(:example_role_class) { Class.new(Law::RoleBase) }
 
   let(:root_name) { Faker::Internet.domain_word.capitalize }
   let(:example_role_name) { "#{root_name}Role" }

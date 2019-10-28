@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
+# Marketing Management
 class MarketingManagerRole < AdminRole
-  desc "Marketing Management"
-
   grant DiscountManagerPermission
 end

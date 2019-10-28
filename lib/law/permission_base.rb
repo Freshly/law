@@ -4,9 +4,11 @@ require_relative "permissions/roles"
 
 # A **Permission** is the "key" that fits the "lock" of a **Regulation**.
 module Law
-  class PermissionBase < DescribableObject
+  class PermissionBase < Spicerack::RootObject
     include Permissions::Roles
 
-    type_name "Permission"
+    def self.key
+      name.chomp("Permission").underscore.to_sym
+    end
   end
 end

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
+# Restriction requiring the current actor to own the object being modified.
 class OwnerRegulation < Law::RegulationBase
-  desc "Restriction requiring the current actor to own the object being modified."
-
   validate :must_own_target
 
   private

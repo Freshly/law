@@ -7,9 +7,6 @@ require "spicerack"
 
 require "law/version"
 
-require "law/concerns/describable"
-
-require "law/describable_object"
 require "law/permission_base"
 require "law/regulation_base"
 
