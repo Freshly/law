@@ -3,7 +3,9 @@
 RSpec.describe Law::Judgement, type: :integration do
   include_context "with an example petition"
 
-  subject(:judge) { described_class.judge(example_petition) }
+  subject(:judge) { judgement.judge }
+
+  let(:judgement) { described_class.new(example_petition) }
 
   shared_examples_for "an enforced law" do
     context "with GuestRole" do
@@ -130,10 +132,6 @@ RSpec.describe Law::Judgement, type: :integration do
         end
       end
 
-      describe "Errors" do
-        it "needs specs"
-      end
-
       it_behaves_like "an enforced law" do
         let(:guest?) { false }
         let(:user?) { true }
@@ -151,8 +149,24 @@ RSpec.describe Law::Judgement, type: :integration do
         end
       end
 
-      describe "Errors" do
-        it "needs specs"
+      describe "#violations" do
+        subject { judgement.violations }
+
+        let(:roles) { UserRole }
+
+        before { judge }
+
+        it { is_expected.to match_array [ instance_of(OwnerRegulation) ] }
+
+        describe "#errors.details" do
+          subject { judgement.violations.map(&:errors).map(&:details) }
+
+          let(:target_errors) do
+            { target: [ error: :does_not_own ] }
+          end
+
+          it { is_expected.to eq([ target_errors ]) }
+        end
       end
 
       it_behaves_like "an enforced law" do
@@ -168,20 +182,57 @@ RSpec.describe Law::Judgement, type: :integration do
 
   context "with CreateDiscountLaw" do
     let(:law) { CreateDiscountLaw }
-
-    describe "Errors" do
-      it "needs specs"
+    let(:params) do
+      { discount_cents: discount_cents, maximum_usages: maximum_usages }
     end
 
-    it "needs context and specs"
+    context "with reasonable terms" do
+      let(:discount_cents) { 1000 }
+      let(:maximum_usages) { 2 }
 
-    # it_behaves_like "an enforced law" do
-    #   let(:guest?) { false }
-    #   let(:user?) { false }
-    #   let(:admin?) { false }
-    #   let(:marketing_manager?) { true }
-    #   let(:marketing_executive?) { true }
-    #   let(:super_admin?) { true }
-    # end
+      it_behaves_like "an enforced law" do
+        let(:guest?) { false }
+        let(:user?) { false }
+        let(:admin?) { false }
+        let(:marketing_manager?) { true }
+        let(:marketing_executive?) { true }
+        let(:super_admin?) { true }
+      end
+    end
+
+    context "with unreasonable terms" do
+      let(:discount_cents) { 10_000 }
+      let(:maximum_usages) { -1 }
+
+      describe "#violations" do
+        subject { judgement.violations }
+
+        let(:roles) { MarketingManagerRole }
+
+        before { judge }
+
+        it { is_expected.to match_array [ instance_of(DiscountManagerRegulation) ] }
+
+        describe "#errors.details" do
+          subject { judgement.violations.map(&:errors).map(&:details) }
+
+          let(:params_errors) do
+            { params_discount_cents: [ count: 2000, error: :less_than_or_equal_to, value: 10_000 ],
+              params_maximum_usages: [ count: 1, error: :greater_than_or_equal_to, value: -1 ] }
+          end
+
+          it { is_expected.to eq([ params_errors ]) }
+        end
+      end
+
+      it_behaves_like "an enforced law" do
+        let(:guest?) { false }
+        let(:user?) { false }
+        let(:admin?) { false }
+        let(:marketing_manager?) { false }
+        let(:marketing_executive?) { true }
+        let(:super_admin?) { true }
+      end
+    end
   end
 end
