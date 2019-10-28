@@ -8,38 +8,38 @@ RSpec.describe Law::Judgement, type: :integration do
   let(:judgement) { described_class.new(example_petition) }
 
   shared_examples_for "an enforced statute" do
-    context "with GuestRole" do
-      let(:roles) { GuestRole }
+    context "when guest" do
+      let(:permissions) { [] }
 
       it { is_expected.to eq guest? }
     end
 
-    context "with UserRole" do
-      let(:roles) { UserRole }
+    context "when user" do
+      let(:permissions) { %i[authentication owner] }
 
       it { is_expected.to eq user? }
     end
 
-    context "with AdminRole" do
-      let(:roles) { AdminRole }
+    context "when admin" do
+      let(:permissions) { %i[administrative authentication] }
 
       it { is_expected.to eq admin? }
     end
 
-    context "with MarketingManagerRole" do
-      let(:roles) { MarketingManagerRole }
+    context "when marketing manager" do
+      let(:permissions) { %i[administrative authentication discount_manager] }
 
       it { is_expected.to eq marketing_manager? }
     end
 
-    context "with MarketingExecutiveRole" do
-      let(:roles) { MarketingExecutiveRole }
+    context "when marketing executive" do
+      let(:permissions) { %i[administrative authentication discount_administrator] }
 
       it { is_expected.to eq marketing_executive? }
     end
 
-    context "with SuperAdminRole" do
-      let(:roles) { SuperAdminRole }
+    context "when super admin" do
+      let(:permissions) { %i[do_anything] }
 
       it { is_expected.to eq super_admin? }
     end
@@ -108,7 +108,7 @@ RSpec.describe Law::Judgement, type: :integration do
     let(:target) { target_class.new }
 
     context "with no target" do
-      let(:roles) { UserRole }
+      let(:permissions) { %i[authentication owner] }
       let(:target) { nil }
 
       it "raises" do
@@ -117,7 +117,7 @@ RSpec.describe Law::Judgement, type: :integration do
     end
 
     context "with invalid target class" do
-      let(:roles) { UserRole }
+      let(:permissions) { %i[authentication owner] }
       let(:target_class) { Class.new }
 
       it "raises" do
@@ -152,7 +152,7 @@ RSpec.describe Law::Judgement, type: :integration do
       describe "#violations" do
         subject { judgement.violations }
 
-        let(:roles) { UserRole }
+        let(:permissions) { %i[authentication owner] }
 
         before { judge }
 
@@ -207,7 +207,7 @@ RSpec.describe Law::Judgement, type: :integration do
       describe "#violations" do
         subject { judgement.violations }
 
-        let(:roles) { MarketingManagerRole }
+        let(:permissions) { %i[administrative authentication discount_manager] }
 
         before { judge }
 

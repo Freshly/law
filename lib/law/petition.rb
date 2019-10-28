@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-# A **Petition** is used to determine if an action would violate a given **Law** using a **Judgement**.
+# A **Petition** is used to make a **Judgement** determining if an action would violate a given **Statute**.
 module Law
   class Petition < Spicerack::InputObject
     argument :statute, allow_nil: false
     option :source
-    option :roles, default: []
+    option :permissions, default: []
     option :target
     option :params, default: {}
 
-    def actor
-      Law::ActorBase.new(roles: Array.wrap(roles).flatten.compact.presence || source.try(:roles))
+    def permission_list
+      Law::PermissionList.new(Array.wrap(permissions).flatten.compact)
     end
-    memoize :actor
+    memoize :permission_list
 
     def applicable_regulations
-      statute.regulations.select(&actor.method(:permitted_to?))
+      statute.regulations.select { |regulation| permission_list.include? regulation.key }
     end
     memoize :applicable_regulations
   end
