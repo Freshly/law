@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
+# Restriction which requires an authenticated user.
 class AuthenticationLaw < CommonLaw
-  desc "Restriction which requires an authenticated user."
-
   impose AuthenticationRegulation
 end

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
+# You can't just do anything! Fundamental restriction against anonymous access.
 class DoAnythingRegulation < Law::RegulationBase
-  desc "You can't just do anything! Fundamental restriction against anonymous access."
 end

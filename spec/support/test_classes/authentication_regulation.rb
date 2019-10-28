@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
+# General restriction requiring Authentication.
 class AuthenticationRegulation < Law::RegulationBase
-  desc "General restriction requiring Authentication."
 end

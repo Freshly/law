@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_context "with an example permission" do
-  subject(:example_permission_class) do
-    Class.new(Law::PermissionBase).tap { |klass| klass.__send__(:desc, description) }
-  end
-
-  let(:description) { Faker::Lorem.sentence }
+  subject(:example_permission_class) { Class.new(Law::PermissionBase) }
 
   let(:root_name) { Faker::Internet.domain_word.capitalize }
   let(:example_permission_name) { "#{root_name}Permission" }

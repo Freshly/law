@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
+# Signed In User Access
 class UserRole < Law::RoleBase
-  desc "Signed In User Access"
-
   grant AuthenticationPermission, OwnerPermission
 end

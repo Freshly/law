@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
+# Restricts sensitive actions intended only for Administrators.
 class AdminLaw < CommonLaw
-  desc "Restricts sensitive actions intended only for Administrators."
-
   impose AdministrativeRegulation
 end

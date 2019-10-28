@@ -22,7 +22,6 @@ require_relative "support/shared_context/with_lock_and_key_names"
 require_relative "support/shared_context/with_roles_and_permissions"
 require_relative "support/shared_context/with_laws_and_regulations"
 
-require_relative "support/shared_context/with_an_example_describable_object"
 require_relative "support/shared_context/with_an_example_permission"
 require_relative "support/shared_context/with_an_example_regulation"
 
@@ -32,8 +31,6 @@ require_relative "support/shared_context/with_an_example_actor"
 require_relative "support/shared_context/with_an_example_law"
 
 require_relative "support/shared_context/with_an_example_petition"
-
-require_relative "support/shared_example/a_describable_object"
 
 require_relative "support/test_classes/do_anything_regulation"
 require_relative "support/test_classes/administrative_regulation"
