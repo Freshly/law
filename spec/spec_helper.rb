@@ -26,7 +26,6 @@ require_relative "support/shared_context/with_an_example_permission"
 require_relative "support/shared_context/with_an_example_regulation"
 
 require_relative "support/shared_context/with_an_example_role"
-require_relative "support/shared_context/with_an_example_actor"
 
 require_relative "support/shared_context/with_an_example_statute"
 

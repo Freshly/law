@@ -6,34 +6,34 @@ RSpec.describe Law::Petition, type: :petition do
   it { is_expected.to inherit_from Spicerack::InputObject }
 
   it { is_expected.to define_argument :statute, allow_nil: false }
-  it { is_expected.to define_option :roles, default: [] }
+  it { is_expected.to define_option :source }
+  it { is_expected.to define_option :permissions, default: [] }
   it { is_expected.to define_option :target }
   it { is_expected.to define_option :params, default: {} }
 
-  describe "#actor" do
-    subject(:actor) { example_petition.actor }
+  describe "#permission_list" do
+    subject(:permission_list) { example_petition.permission_list }
 
     context "with nothing" do
-      subject(:example_petition) { described_class.new(statute: statute) }
+      let(:example_petition) { described_class.new(statute: statute) }
 
-      it "raises" do
-        expect { actor }.to raise_error ArgumentError, "Missing argument: roles"
-      end
+      it { is_expected.to be_empty }
     end
 
-    context "with roles" do
-      context "when one" do
-        let(:roles) { role0 }
+    context "with permissions" do
+      context "when symbols" do
+        let(:permissions) { %i[foo bar] }
 
-        it { is_expected.to be_a_kind_of Law::ActorBase }
-        it { is_expected.to have_attributes(permissions: role0.permissions) }
+        it { is_expected.to be_a_kind_of Collectible::CollectionBase }
+        it { is_expected.to match_array permissions }
       end
 
-      context "when many" do
-        let(:roles) { [ role0, role1 ] }
+      context "when not" do
+        let(:permissions) { %w[foo bar] }
 
-        it { is_expected.to be_a_kind_of Law::ActorBase }
-        it { is_expected.to have_attributes(permissions: [ permission0, permission1, permission2 ]) }
+        it "raises" do
+          expect { permission_list }.to raise_error Collectible::ItemNotAllowedError, "not allowed: \"foo\", \"bar\""
+        end
       end
     end
   end
@@ -42,21 +42,19 @@ RSpec.describe Law::Petition, type: :petition do
     subject(:actor) { example_petition.applicable_regulations }
 
     context "with nothing" do
-      subject(:example_petition) { described_class.new(statute: statute) }
+      let(:example_petition) { described_class.new(statute: statute) }
 
-      it "raises" do
-        expect { actor }.to raise_error ArgumentError, "Missing argument: roles"
-      end
+      it { is_expected.to be_empty }
     end
 
     context "with partial overlap" do
-      let(:roles) { role1 }
+      let(:permissions) { regulation1.key }
 
       it { is_expected.to eq [ regulation1 ] }
     end
 
     context "with full overlap" do
-      let(:roles) { role0 }
+      let(:permissions) { [ regulation0.key, regulation1.key ] }
 
       it { is_expected.to eq [ regulation0, regulation1 ] }
     end

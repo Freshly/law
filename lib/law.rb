@@ -11,7 +11,8 @@ require "law/permission_base"
 require "law/regulation_base"
 
 require "law/role_base"
-require "law/actor_base"
+
+require "law/permission_list"
 
 require "law/statute_base"
 
