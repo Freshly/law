@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# A **Law** is a collection of imposed **Regulations**.
+# A **Statute** is a collection of imposed **Regulations**.
 module Law
-  module Laws
+  module Statutes
     module Regulations
       extend ActiveSupport::Concern
 
@@ -40,6 +40,7 @@ module Law
 
         def ensure_valid_regulations(imposed_regulations)
           raise ArgumentError, "a regulation is required" if imposed_regulations.empty?
+
           invalid_regulations = imposed_regulations.reject { |permission| permission.respond_to?(:imposed_by) }
           raise ArgumentError, "invalid regulations: #{invalid_regulations.join(", ")}" if invalid_regulations.present?
         end

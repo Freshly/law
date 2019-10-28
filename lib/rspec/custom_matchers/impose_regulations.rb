@@ -1,16 +1,15 @@
 # frozen_string_literal: true
 
-# RSpec matcher that tests imposing of regulations by laws.
+# RSpec matcher that tests imposing of regulations by statutes.
 #
 #     class ExampleRegulation < ApplicationRegulation
-#       desc "A short sentence to contextualize the reason this regulation exists."
 #     end
 #
-#     class ExampleLaw < ApplicationLaw
+#     class ExampleStatute < ApplicationStatute
 #       impose ExampleRegulation
 #     end
 #
-#     RSpec.describe ExampleLaw, type: :law do
+#     RSpec.describe ExampleStatute, type: :statute do
 #       it { is_expected.to impose_regulations ExampleRegulation }
 #     end
 

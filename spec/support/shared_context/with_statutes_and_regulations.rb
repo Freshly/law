@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-RSpec.shared_context "with laws and regulations" do
+RSpec.shared_context "with statutes and regulations" do
   include_context "with lock and key names"
 
   let(:regulation0) { Class.new(Law::RegulationBase) }
   let(:regulation1) { Class.new(Law::RegulationBase) }
   let(:regulation2) { Class.new(Law::RegulationBase) }
 
-  let(:law0) do
-    Class.new(Law::LawBase).tap { |klass| klass.__send__(:impose, regulation0, regulation1) }
+  let(:statute0) do
+    Class.new(Law::StatuteBase).tap { |klass| klass.__send__(:impose, regulation0, regulation1) }
   end
-  let(:law1) do
-    Class.new(Law::LawBase).tap { |klass| klass.__send__(:impose, regulation1, regulation2) }
+  let(:statute1) do
+    Class.new(Law::StatuteBase).tap { |klass| klass.__send__(:impose, regulation1, regulation2) }
   end
 
   before do

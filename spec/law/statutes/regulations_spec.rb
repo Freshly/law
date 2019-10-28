@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe Law::Laws::Regulations, type: :concern do
-  include_context "with an example law"
+RSpec.describe Law::Statutes::Regulations, type: :concern do
+  include_context "with an example statute"
 
   it { is_expected.to delegate_method(:unregulated?).to(:class) }
 
   describe ".impose" do
-    subject(:impose) { example_law_class.__send__(:impose, input) }
+    subject(:impose) { example_statute_class.__send__(:impose, input) }
 
     let(:valid_regulation) do
       Class.new do
@@ -21,8 +21,8 @@ RSpec.describe Law::Laws::Regulations, type: :concern do
         let(:input) { valid_regulation }
 
         it "is assigned" do
-          expect { impose }.to change { example_law_class.regulations }.from([]).to([ input ])
-          expect(valid_regulation).to have_received(:imposed_by).with(example_law_class)
+          expect { impose }.to change { example_statute_class.regulations }.from([]).to([ input ])
+          expect(valid_regulation).to have_received(:imposed_by).with(example_statute_class)
         end
       end
 
@@ -51,8 +51,8 @@ RSpec.describe Law::Laws::Regulations, type: :concern do
         end
 
         it "is assigned" do
-          expect { impose }.to change { example_law_class.regulations }.from([]).to(input)
-          expect(valid_regulation).to have_received(:imposed_by).with(example_law_class).exactly(3).times
+          expect { impose }.to change { example_statute_class.regulations }.from([]).to(input)
+          expect(valid_regulation).to have_received(:imposed_by).with(example_statute_class).exactly(3).times
         end
       end
 
@@ -82,7 +82,7 @@ RSpec.describe Law::Laws::Regulations, type: :concern do
   describe ".inherited" do
     it_behaves_like "an inherited property", :impose, :regulations do
       let(:root_class) do
-        Class.new(Law::LawBase) do
+        Class.new(Law::StatuteBase) do
           # This is a test for the values being properly inherited, validations are not required and tested elsewhere.
           def self.ensure_valid_regulations(*); end
           def self.track_regulation(*); end
@@ -93,7 +93,7 @@ RSpec.describe Law::Laws::Regulations, type: :concern do
 
   describe ".unregulated?" do
     context "with regulations" do
-      before { example_law_class.__send__(:impose, Class.new(Law::RegulationBase)) }
+      before { example_statute_class.__send__(:impose, Class.new(Law::RegulationBase)) }
 
       it { is_expected.not_to be_unregulated }
     end

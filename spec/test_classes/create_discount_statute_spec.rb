@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe CreateDiscountLaw, type: :law do
-  it { is_expected.to inherit_from CommonLaw }
+RSpec.describe CreateDiscountStatute, type: :statute do
+  it { is_expected.to inherit_from CommonStatute }
 
   it { is_expected.to impose_regulations DiscountAdministratorRegulation, DiscountManagerRegulation }
 end
