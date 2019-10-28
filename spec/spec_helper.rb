@@ -20,7 +20,7 @@ require_relative "../lib/spec_helper"
 
 require_relative "support/shared_context/with_lock_and_key_names"
 require_relative "support/shared_context/with_roles_and_permissions"
-require_relative "support/shared_context/with_laws_and_regulations"
+require_relative "support/shared_context/with_statutes_and_regulations"
 
 require_relative "support/shared_context/with_an_example_permission"
 require_relative "support/shared_context/with_an_example_regulation"
@@ -28,7 +28,7 @@ require_relative "support/shared_context/with_an_example_regulation"
 require_relative "support/shared_context/with_an_example_role"
 require_relative "support/shared_context/with_an_example_actor"
 
-require_relative "support/shared_context/with_an_example_law"
+require_relative "support/shared_context/with_an_example_statute"
 
 require_relative "support/shared_context/with_an_example_petition"
 
@@ -39,12 +39,12 @@ require_relative "support/test_classes/owner_regulation"
 require_relative "support/test_classes/discount_administrator_regulation"
 require_relative "support/test_classes/discount_manager_regulation"
 
-require_relative "support/test_classes/unregulated_law"
-require_relative "support/test_classes/common_law"
-require_relative "support/test_classes/authentication_law"
-require_relative "support/test_classes/admin_law"
-require_relative "support/test_classes/owner_law"
-require_relative "support/test_classes/create_discount_law"
+require_relative "support/test_classes/unregulated_statute"
+require_relative "support/test_classes/common_statute"
+require_relative "support/test_classes/authentication_statute"
+require_relative "support/test_classes/admin_statute"
+require_relative "support/test_classes/owner_statute"
+require_relative "support/test_classes/create_discount_statute"
 
 require_relative "support/test_classes/do_anything_permission"
 require_relative "support/test_classes/administrative_permission"

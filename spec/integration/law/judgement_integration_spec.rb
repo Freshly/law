@@ -7,7 +7,7 @@ RSpec.describe Law::Judgement, type: :integration do
 
   let(:judgement) { described_class.new(example_petition) }
 
-  shared_examples_for "an enforced law" do
+  shared_examples_for "an enforced statute" do
     context "with GuestRole" do
       let(:roles) { GuestRole }
 
@@ -45,10 +45,10 @@ RSpec.describe Law::Judgement, type: :integration do
     end
   end
 
-  context "when unregulated" do
-    let(:law) { UnregulatedLaw }
+  context "when UnregulatedStatute" do
+    let(:statute) { UnregulatedStatute }
 
-    it_behaves_like "an enforced law" do
+    it_behaves_like "an enforced statute" do
       let(:guest?) { true }
       let(:user?) { true }
       let(:admin?) { true }
@@ -58,10 +58,10 @@ RSpec.describe Law::Judgement, type: :integration do
     end
   end
 
-  context "with CommonLaw" do
-    let(:law) { CommonLaw }
+  context "with CommonStatute" do
+    let(:statute) { CommonStatute }
 
-    it_behaves_like "an enforced law" do
+    it_behaves_like "an enforced statute" do
       let(:guest?) { false }
       let(:user?) { false }
       let(:admin?) { false }
@@ -71,10 +71,10 @@ RSpec.describe Law::Judgement, type: :integration do
     end
   end
 
-  context "with AuthenticationLaw" do
-    let(:law) { AuthenticationLaw }
+  context "with AuthenticationStatute" do
+    let(:statute) { AuthenticationStatute }
 
-    it_behaves_like "an enforced law" do
+    it_behaves_like "an enforced statute" do
       let(:guest?) { false }
       let(:user?) { true }
       let(:admin?) { true }
@@ -84,10 +84,10 @@ RSpec.describe Law::Judgement, type: :integration do
     end
   end
 
-  context "with AdminLaw" do
-    let(:law) { AdminLaw }
+  context "with AdminStatute" do
+    let(:statute) { AdminStatute }
 
-    it_behaves_like "an enforced law" do
+    it_behaves_like "an enforced statute" do
       let(:guest?) { false }
       let(:user?) { false }
       let(:admin?) { true }
@@ -97,8 +97,8 @@ RSpec.describe Law::Judgement, type: :integration do
     end
   end
 
-  context "with OwnerLaw" do
-    let(:law) { OwnerLaw }
+  context "with OwnerStatute" do
+    let(:statute) { OwnerStatute }
     let(:user_class) do
       Class.new.tap do |klass|
         klass.define_method(:id) { 1 }
@@ -132,7 +132,7 @@ RSpec.describe Law::Judgement, type: :integration do
         end
       end
 
-      it_behaves_like "an enforced law" do
+      it_behaves_like "an enforced statute" do
         let(:guest?) { false }
         let(:user?) { true }
         let(:admin?) { true }
@@ -169,7 +169,7 @@ RSpec.describe Law::Judgement, type: :integration do
         end
       end
 
-      it_behaves_like "an enforced law" do
+      it_behaves_like "an enforced statute" do
         let(:guest?) { false }
         let(:user?) { false }
         let(:admin?) { true }
@@ -180,8 +180,8 @@ RSpec.describe Law::Judgement, type: :integration do
     end
   end
 
-  context "with CreateDiscountLaw" do
-    let(:law) { CreateDiscountLaw }
+  context "with CreateDiscountStatute" do
+    let(:statute) { CreateDiscountStatute }
     let(:params) do
       { discount_cents: discount_cents, maximum_usages: maximum_usages }
     end
@@ -190,7 +190,7 @@ RSpec.describe Law::Judgement, type: :integration do
       let(:discount_cents) { 1000 }
       let(:maximum_usages) { 2 }
 
-      it_behaves_like "an enforced law" do
+      it_behaves_like "an enforced statute" do
         let(:guest?) { false }
         let(:user?) { false }
         let(:admin?) { false }
@@ -225,7 +225,7 @@ RSpec.describe Law::Judgement, type: :integration do
         end
       end
 
-      it_behaves_like "an enforced law" do
+      it_behaves_like "an enforced statute" do
         let(:guest?) { false }
         let(:user?) { false }
         let(:admin?) { false }

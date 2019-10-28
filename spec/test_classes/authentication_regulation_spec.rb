@@ -5,5 +5,5 @@ RSpec.describe DoAnythingRegulation, type: :regulation do
 
   it { is_expected.to inherit_from Law::RegulationBase }
 
-  it { is_expected.to be_imposed_by CommonLaw }
+  it { is_expected.to be_imposed_by CommonStatute }
 end

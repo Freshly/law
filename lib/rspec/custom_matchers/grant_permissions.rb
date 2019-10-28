@@ -3,7 +3,6 @@
 # RSpec matcher that tests grants of permissions to roles.
 #
 #     class ExamplePermission < ApplicationPermission
-#       desc "A short sentence to contextualize the reason this permission exists."
 #     end
 #
 #     class ExampleRole < ApplicationRole

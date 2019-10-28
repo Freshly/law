@@ -5,7 +5,7 @@ RSpec.describe OwnerRegulation, type: :regulation do
 
   it { is_expected.to inherit_from Law::RegulationBase }
 
-  it { is_expected.to be_imposed_by OwnerLaw }
+  it { is_expected.to be_imposed_by OwnerStatute }
 
   describe "#must_own_target" do
     include_context "with an example petition"

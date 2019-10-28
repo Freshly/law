@@ -5,11 +5,16 @@ RSpec.describe Law::Petition, type: :petition do
 
   it { is_expected.to inherit_from Spicerack::InputObject }
 
+  it { is_expected.to define_argument :statute, allow_nil: false }
+  it { is_expected.to define_option :roles, default: [] }
+  it { is_expected.to define_option :target }
+  it { is_expected.to define_option :params, default: {} }
+
   describe "#actor" do
     subject(:actor) { example_petition.actor }
 
     context "with nothing" do
-      subject(:example_petition) { described_class.new(law: law) }
+      subject(:example_petition) { described_class.new(statute: statute) }
 
       it "raises" do
         expect { actor }.to raise_error ArgumentError, "Missing argument: roles"
@@ -37,7 +42,7 @@ RSpec.describe Law::Petition, type: :petition do
     subject(:actor) { example_petition.applicable_regulations }
 
     context "with nothing" do
-      subject(:example_petition) { described_class.new(law: law) }
+      subject(:example_petition) { described_class.new(statute: statute) }
 
       it "raises" do
         expect { actor }.to raise_error ArgumentError, "Missing argument: roles"

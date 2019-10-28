@@ -3,7 +3,7 @@
 # A **Petition** is used to determine if an action would violate a given **Law** using a **Judgement**.
 module Law
   class Petition < Spicerack::InputObject
-    argument :law, allow_nil: false
+    argument :statute, allow_nil: false
     option :source
     option :roles, default: []
     option :target
@@ -15,7 +15,7 @@ module Law
     memoize :actor
 
     def applicable_regulations
-      law.regulations.select(&actor.method(:permitted_to?))
+      statute.regulations.select(&actor.method(:permitted_to?))
     end
     memoize :applicable_regulations
   end

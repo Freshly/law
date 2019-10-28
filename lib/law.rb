@@ -13,7 +13,7 @@ require "law/regulation_base"
 require "law/role_base"
 require "law/actor_base"
 
-require "law/law_base"
+require "law/statute_base"
 
 require "law/petition"
 require "law/judgement"

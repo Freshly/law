@@ -13,7 +13,7 @@ RSpec.describe DiscountManagerRegulation, type: :regulation do
 
   it { is_expected.to inherit_from Law::RegulationBase }
 
-  it { is_expected.to be_imposed_by CreateDiscountLaw }
+  it { is_expected.to be_imposed_by CreateDiscountStatute }
 
   it { is_expected.to validate_numericality_of(:params_discount_cents).is_greater_than_or_equal_to(0) }
   it { is_expected.to validate_numericality_of(:params_discount_cents).is_less_than_or_equal_to(2000) }

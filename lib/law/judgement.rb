@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# A **Judgement** determines if an **Actor** (representing a set of **Roles**) are in violation of the given **Law**.
+# A **Judgement** determines if an **Actor** (represented by their **Roles**) are in violation of the given **Statute**.
 module Law
   class Judgement < Spicerack::RootObject
     class << self
@@ -15,7 +15,7 @@ module Law
 
     attr_reader :petition, :violations, :applied_regulations
 
-    delegate :law, :applicable_regulations, to: :petition
+    delegate :statute, :applicable_regulations, to: :petition
 
     def initialize(petition)
       @petition = petition
@@ -35,7 +35,7 @@ module Law
     end
 
     def judge!
-      return true if law.unregulated?
+      return true if statute.unregulated?
 
       raise InjunctionError if applicable_regulations.blank?
       raise AlreadyJudgedError if applied_regulations.present?

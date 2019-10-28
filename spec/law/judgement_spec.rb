@@ -3,13 +3,13 @@
 RSpec.describe Law::Judgement, type: :judgement do
   subject(:example_judgement) { described_class.new(petition) }
 
-  let(:petition) { instance_double(Law::Petition, law: law) }
-  let(:law) { instance_double(Law::LawBase, unregulated?: unregulated?) }
+  let(:petition) { instance_double(Law::Petition, statute: statute) }
+  let(:statute) { instance_double(Law::StatuteBase, unregulated?: unregulated?) }
   let(:unregulated?) { true }
 
   it { is_expected.to inherit_from Spicerack::RootObject }
 
-  it { is_expected.to delegate_method(:law).to(:petition) }
+  it { is_expected.to delegate_method(:statute).to(:petition) }
   it { is_expected.to delegate_method(:applicable_regulations).to(:petition) }
 
   describe "#authorized?" do
