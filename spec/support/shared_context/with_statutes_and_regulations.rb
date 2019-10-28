@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.shared_context "with statutes and regulations" do
-  include_context "with lock and key names"
+  let(:root_name) { Faker::Internet.domain_word.capitalize }
+
+  let(:regulation0_name) { "#{root_name}xRegulation" }
+  let(:regulation1_name) { "#{root_name}yRegulation" }
+  let(:regulation2_name) { "#{root_name}zRegulation" }
 
   let(:regulation0) { Class.new(Law::RegulationBase) }
   let(:regulation1) { Class.new(Law::RegulationBase) }
