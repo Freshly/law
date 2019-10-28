@@ -16,6 +16,8 @@ require "law/statute_base"
 require "law/petition"
 require "law/judgement"
 
+require "law/base"
+
 module Law
   class Error < StandardError; end
 

@@ -18,10 +18,11 @@ require "law"
 
 require_relative "../lib/spec_helper"
 
-require_relative "support/shared_context/with_statutes_and_regulations"
+require_relative "support/shared_context/with_an_example_law"
+require_relative "support/shared_context/with_an_example_petition"
 require_relative "support/shared_context/with_an_example_regulation"
 require_relative "support/shared_context/with_an_example_statute"
-require_relative "support/shared_context/with_an_example_petition"
+require_relative "support/shared_context/with_statutes_and_regulations"
 
 require_relative "support/test_classes/do_anything_regulation"
 require_relative "support/test_classes/administrative_regulation"
