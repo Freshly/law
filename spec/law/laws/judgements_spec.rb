@@ -25,6 +25,14 @@ RSpec.describe Law::Laws::Judgements, type: :concern do
     it { is_expected.to be_adjudicated }
   end
 
+  describe "#authorize!" do
+    subject(:authorize!) { example_law.authorize!(action) }
+
+    it { is_expected.to be_a_kind_of Law::Judgement }
+    it { is_expected.to have_attributes(petition: petition) }
+    it { is_expected.to be_adjudicated }
+  end
+
   describe "#authorized?" do
     subject(:authorized?) { example_law.authorized?(action) }
 

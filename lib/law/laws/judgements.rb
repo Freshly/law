@@ -24,6 +24,10 @@ module Law
         judgement(action).tap(&:judge)
       end
 
+      def authorize!(action)
+        judgement(action).tap(&:judge!)
+      end
+
       def authorized?(action)
         judgement(action).judge
       end
