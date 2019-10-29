@@ -39,6 +39,10 @@ require_relative "support/test_classes/admin_statute"
 require_relative "support/test_classes/owner_statute"
 require_relative "support/test_classes/create_discount_statute"
 
+require_relative "support/test_classes/application_law"
+require_relative "support/test_classes/admin_law"
+require_relative "support/test_classes/discount_law"
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"

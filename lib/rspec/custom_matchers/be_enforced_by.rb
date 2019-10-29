@@ -6,19 +6,23 @@
 #     end
 #
 #     class ExampleLaw < ApplicationStatute
-#       action :new, enforces: ExampleRegulation
-#       action :create, enforces: ExampleRegulation
+#       define_action :new, enforces: ExampleRegulation
+#       define_action :create, enforces: ExampleRegulation
 #     end
 #
-#     RSpec.describe ExampleRegulation, type: :regulation do
-#       it { is_expected.to be_enforced_by ExampleLaw => %i[new create] }
+#     RSpec.describe ExampleStatute, type: :statute do
+#       it { is_expected.to be_enforced_by ExampleLaw, :new, :create }
 #     end
 
-RSpec::Matchers.define :be_enforced_by do |hash|
-  match { expect(test_subject.laws).to include hash }
-  description { "be imposed by #{hash}" }
-  failure_message { "expected #{test_subject} to be imposed by #{hash}; #{test_subject.laws}" }
-  failure_message_when_negated { "expected #{test_subject} not to be imposed by #{hash}; #{test_subject.laws}" }
+RSpec::Matchers.define :be_enforced_by do |statute, *methods|
+  match { expect(test_subject.laws).to include(statute => a_collection_including(*methods.flatten)) }
+  description { "be enforced by #{statute} on #{methods.flatten.join(", ")}" }
+  failure_message do
+    "expected #{test_subject} to be enforced by #{statute} on #{methods.flatten.join(", ")}; #{test_subject.laws}"
+  end
+  failure_message_when_negated do
+    "expected #{test_subject} not to be enforced by #{statute} on #{methods.flatten.join(", ")}; #{test_subject.laws}"
+  end
 
   def test_subject
     subject.is_a?(Class) ? subject : subject.class

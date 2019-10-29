@@ -12,7 +12,9 @@ RSpec.describe Law::Laws::Statutes, type: :concern do
     let(:_default_statute) { Class.new(Law::StatuteBase) }
 
     it "assigns _default_statute" do
-      expect { default_statute }.to change { example_law_class._default_statute }.from(nil).to(_default_statute)
+      expect { default_statute }.
+        to change { example_law_class._default_statute }.from(nil).to(_default_statute).
+        and change { _default_statute.laws }.from({}).to(example_law_class => %i[__default__])
     end
   end
 
