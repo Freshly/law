@@ -25,15 +25,14 @@ module Law
         private
 
         def define_action(action, enforces: nil)
-          raise ArgumentError, "can only enforce Statute classes" unless valid_enforces?(enforces)
+          raise ArgumentError, "invalid statute: #{enforces}" unless enforceable?(enforces)
 
           actions[action] = enforces
+          enforces.try(:enforced_by, self, action)
         end
 
-        def valid_enforces?(enforces)
-          return true if enforces.nil?
-
-          enforces.is_a?(Class) && enforces.ancestors.include?(Law::StatuteBase)
+        def enforceable?(enforces)
+          enforces.nil? || enforces.respond_to?(:enforced_by)
         end
       end
     end

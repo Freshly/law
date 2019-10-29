@@ -14,12 +14,13 @@ RSpec.describe Law::Laws::Actions, type: :concern do
     shared_examples_for "an action is defined" do
       it "defines action" do
         expect { define_action }.to change { example_law_class.actions }.from({}).to(action => enforces)
+        expect(enforces).to have_received(:enforced_by).with(example_law_class, action) if enforces.present?
       end
     end
 
     shared_examples_for "an error is raised" do
       it "raises" do
-        expect { define_action }.to raise_error ArgumentError, "can only enforce Statute classes"
+        expect { define_action }.to raise_error ArgumentError
       end
     end
 
@@ -43,6 +44,8 @@ RSpec.describe Law::Laws::Actions, type: :concern do
 
         context "with class" do
           let(:enforces) { example_statute_class }
+
+          before { allow(enforces).to receive(:enforced_by) }
 
           it_behaves_like "an action is defined"
         end
