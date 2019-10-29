@@ -7,4 +7,5 @@ RSpec.describe Law::LawBase, type: :law do
 
   it { is_expected.to include_module Law::Laws::Actions }
   it { is_expected.to include_module Law::Laws::Statutes }
+  it { is_expected.to include_module Law::Laws::Petitions }
 end
