@@ -12,9 +12,12 @@ RSpec.describe Law::Laws::Actions, type: :concern do
     let(:enforces) { nil }
 
     shared_examples_for "an action is defined" do
+      before { allow(example_law_class).to receive(:define_judgement_predicates_for_action) }
+
       it "defines action" do
         expect { define_action }.to change { example_law_class.actions }.from({}).to(action => enforces)
         expect(enforces).to have_received(:enforced_by).with(example_law_class, action) if enforces.present?
+        expect(example_law_class).to have_received(:define_judgement_predicates_for_action).with(action)
       end
     end
 
