@@ -86,7 +86,7 @@ RSpec.describe Law::Laws::Actions, type: :concern do
       let(:root_class) do
         Class.new(Law::LawBase) do
           # This is a test for the values being properly inherited, validations are not required and tested elsewhere.
-          def self.valid_enforces?(*)
+          def self.enforceable?(*)
             true
           end
         end
