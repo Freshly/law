@@ -25,7 +25,10 @@ module Law
         protected
 
         def default_statute(statute)
+          raise ArgumentError, "invalid statute: #{enforces}" unless statute.respond_to?(:enforced_by)
+
           @_default_statute = statute
+          statute.enforced_by(self, :__default__)
         end
       end
     end

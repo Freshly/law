@@ -24,12 +24,14 @@ module Law
 
         private
 
-        def define_action(action, enforces: nil)
+        def define_action(*input_actions, enforces: nil)
           raise ArgumentError, "invalid statute: #{enforces}" unless enforceable?(enforces)
 
-          actions[action] = enforces
-          enforces.try(:enforced_by, self, action)
-          define_judgement_predicates_for_action(action)
+          input_actions.each do |action|
+            actions[action] = enforces
+            enforces.try(:enforced_by, self, action)
+            define_judgement_predicates_for_action(action)
+          end
         end
 
         def enforceable?(enforces)
