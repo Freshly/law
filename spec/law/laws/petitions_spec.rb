@@ -9,10 +9,11 @@ RSpec.describe Law::Laws::Petitions, type: :concern do
   it { is_expected.to define_option :params, default: {} }
 
   describe "#petition_for_action" do
+    include_context "with petition data"
+
     subject(:petition_for) { example_law.petition_for_action(action) }
 
     let(:action) { Faker::Internet.domain_word.to_sym }
-    let(:statute) { Class.new(Law::StatuteBase) }
     let(:expected_arguments) do
       { statute: statute, source: source, permissions: permissions, target: target, params: params }
     end

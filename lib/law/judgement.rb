@@ -23,6 +23,10 @@ module Law
       @applied_regulations = []
     end
 
+    def adjudicated?
+      applied_regulations.present?
+    end
+
     def authorized?
       violations.blank?
     end
@@ -35,10 +39,13 @@ module Law
     end
 
     def judge!
-      return true if statute.unregulated?
+      if statute.unregulated?
+        @applied_regulations = [ nil ]
+        return true
+      end
 
       raise InjunctionError if applicable_regulations.blank?
-      raise AlreadyJudgedError if applied_regulations.present?
+      raise AlreadyJudgedError if adjudicated?
 
       @applied_regulations = applicable_regulations.map { |regulation| regulation.new(petition: petition) }
       @violations = applied_regulations.reject(&:valid?)

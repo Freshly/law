@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# A **Law** can have a default **Statute** to apply against **Actions** which do not otherwise specify.
+# A **Law** creates a **Petition** for the **Statute** enforced against an **Action**; all other data must be specified.
 module Law
   module Laws
     module Petitions
