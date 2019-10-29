@@ -26,6 +26,22 @@ RSpec.describe Law::Judgement, type: :judgement do
     end
   end
 
+  describe "#adjudicated?" do
+    subject { example_judgement }
+
+    context "without applied_regulations" do
+      it { is_expected.not_to be_adjudicated }
+    end
+
+    context "with applied_regulations" do
+      before do
+        allow(example_judgement).to receive(:applied_regulations).and_return([instance_double(Law::RegulationBase)])
+      end
+
+      it { is_expected.to be_adjudicated }
+    end
+  end
+
   describe ".judge!" do
     it_behaves_like "a class pass method", :judge!
   end

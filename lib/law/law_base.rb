@@ -3,6 +3,7 @@
 require_relative "laws/actions"
 require_relative "laws/statutes"
 require_relative "laws/petitions"
+require_relative "laws/judgements"
 
 # A **Law** defines which **Statutes** are enforced against specifics **Actions**.
 module Law
@@ -10,5 +11,6 @@ module Law
     include Law::Laws::Actions
     include Law::Laws::Statutes
     include Law::Laws::Petitions
+    include Law::Laws::Judgements
   end
 end
