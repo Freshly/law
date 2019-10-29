@@ -29,6 +29,7 @@ module Law
 
           actions[action] = enforces
           enforces.try(:enforced_by, self, action)
+          define_judgement_predicates_for_action(action)
         end
 
         def enforceable?(enforces)
