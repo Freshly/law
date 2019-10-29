@@ -81,7 +81,7 @@ RSpec.describe Law::Laws::Actions, type: :concern do
   describe ".inherited" do
     it_behaves_like "an inherited property", :define_action, :actions do
       let(:root_class) do
-        Class.new(Law::Base) do
+        Class.new(Law::LawBase) do
           # This is a test for the values being properly inherited, validations are not required and tested elsewhere.
           def self.valid_enforces?(*)
             true
