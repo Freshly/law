@@ -1,7 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.shared_context "with an example law" do
-  subject(:example_law) { example_law_class.new }
+  subject(:example_law) do
+    example_law_class.new(source: source, permissions: permissions, target: target, params: params)
+  end
+
+  let(:source) { nil }
+  let(:permissions) { [] }
+  let(:target) { nil }
+  let(:params) { {} }
 
   let(:example_law_class) { Class.new(Law::LawBase) }
 
