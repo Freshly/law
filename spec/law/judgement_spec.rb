@@ -130,7 +130,10 @@ RSpec.describe Law::Judgement, type: :judgement do
 
         shared_examples_for "violations are tracked" do
           it "has violations" do
-            expect { judge! }.to change { example_judgement.violations }.from([]).to(expected_violations)
+            expect { judge! }.
+              to change { example_judgement.applied_regulations }.from([]).to(expected_applied_regulations).
+              and change { example_judgement.violations }.from([]).to(expected_violations).
+              and raise_error Law::NotAuthorizedError
           end
         end
 
@@ -141,10 +144,6 @@ RSpec.describe Law::Judgement, type: :judgement do
           it { is_expected.to eq true }
 
           it_behaves_like "regulations are applied"
-
-          it "has no violations" do
-            expect { judge! }.not_to change { example_judgement.violations }.from(expected_violations)
-          end
         end
 
         context "when one regulations are invalid" do
@@ -152,9 +151,6 @@ RSpec.describe Law::Judgement, type: :judgement do
           let(:regulation1_valid?) { false }
           let(:expected_violations) { [ regulation1_instance ] }
 
-          it { is_expected.to eq false }
-
-          it_behaves_like "regulations are applied"
           it_behaves_like "violations are tracked"
         end
 
@@ -163,9 +159,6 @@ RSpec.describe Law::Judgement, type: :judgement do
           let(:regulation1_valid?) { false }
           let(:expected_violations) { [ regulation0_instance, regulation1_instance ] }
 
-          it { is_expected.to eq false }
-
-          it_behaves_like "regulations are applied"
           it_behaves_like "violations are tracked"
         end
       end

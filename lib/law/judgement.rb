@@ -50,7 +50,9 @@ module Law
       @applied_regulations = applicable_regulations.map { |regulation| regulation.new(petition: petition) }
       @violations = applied_regulations.reject(&:valid?)
 
-      authorized?
+      raise NotAuthorizedError unless authorized?
+
+      true
     end
   end
 end
