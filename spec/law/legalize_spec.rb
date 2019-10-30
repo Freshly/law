@@ -7,6 +7,28 @@ RSpec.describe Law::Legalize, type: :concern do
     Class.new.tap { |klass| klass.include described_class }
   end
 
+  describe ".helper_method" do
+    subject { legalized_class.helped_methods }
+
+    let(:legalized_class) do
+      Class.new.tap do |klass|
+        klass.define_singleton_method(:helped_methods) { @helped_methods ||= [] }
+        klass.define_singleton_method(:helper_method) { |method| helped_methods << method }
+        klass.include described_class
+      end
+    end
+
+    it { is_expected.to match_array :policy }
+  end
+
+  describe "#policy" do
+    subject { legalized_object.policy(object) }
+
+    let(:object) { double }
+
+    it { is_expected.to be_nil }
+  end
+
   describe "#authorized?" do
     context "without adjudication" do
       it { is_expected.not_to be_authorized }
@@ -86,7 +108,7 @@ RSpec.describe Law::Legalize, type: :concern do
   end
 
   describe "#authorize!" do
-    subject(:authorize!) { legalized_object.__send__(:authorize!, **options) }
+    subject(:authorize!) { legalized_object.authorize!(**options) }
 
     let(:options) { Hash[*Faker::Lorem.words(2 * rand(1..2))].symbolize_keys }
 
@@ -108,7 +130,7 @@ RSpec.describe Law::Legalize, type: :concern do
   end
 
   describe "#authorize" do
-    subject(:authorize) { legalized_object.__send__(:authorize, **options) }
+    subject(:authorize) { legalized_object.authorize(**options) }
 
     let(:options) do
       { object: input_object,
@@ -252,7 +274,7 @@ RSpec.describe Law::Legalize, type: :concern do
   end
 
   describe "#legal?" do
-    subject(:legal?) { legalized_object.__send__(:legal?, law_class, action, permissions, source, target, params) }
+    subject(:legal?) { legalized_object.legal?(law_class, action, permissions, source, target, params) }
 
     let(:action) { Faker::Internet.domain_word }
     let(:permissions) { double }

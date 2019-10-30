@@ -5,6 +5,10 @@ module Law
   module Legalize
     extend ActiveSupport::Concern
 
+    included do
+      helper_method :policy if respond_to?(:helper_method)
+    end
+
     attr_reader :law, :judgement
 
     def authorized?
@@ -19,7 +23,9 @@ module Law
       judgement.try(:violations) || []
     end
 
-    private
+    def policy(object)
+      nil
+    end
 
     def authorize!(**options)
       authorize(**options) or raise Law::NotAuthorizedError
@@ -44,6 +50,8 @@ module Law
       @judgement = @law.authorize(action)
       authorized?
     end
+
+    private
 
     def law_finder
       @law_finder ||= Spicerack::ClassFinder.new("Law")
