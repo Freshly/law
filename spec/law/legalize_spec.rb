@@ -18,15 +18,29 @@ RSpec.describe Law::Legalize, type: :concern do
       end
     end
 
-    it { is_expected.to match_array :policy }
+    it { is_expected.to match_array :law }
   end
 
-  describe "#policy" do
-    subject { legalized_object.policy(object) }
+  describe "#authorize!" do
+    subject(:authorize!) { legalized_object.authorize!(**options) }
 
-    let(:object) { double }
+    let(:options) { Hash[*Faker::Lorem.words(2 * rand(1..2))].symbolize_keys }
 
-    it { is_expected.to be_nil }
+    before { allow(legalized_object).to receive(:authorize).with(**options).and_return(authorized?) }
+
+    context "when unauthorized" do
+      let(:authorized?) { false }
+
+      it "raises" do
+        expect { authorize! }.to raise_error Law::NotAuthorizedError
+      end
+    end
+
+    context "when authorized" do
+      let(:authorized?) { true }
+
+      it { is_expected.to eq true }
+    end
   end
 
   describe "#authorized?" do
@@ -107,214 +121,279 @@ RSpec.describe Law::Legalize, type: :concern do
     end
   end
 
-  describe "#authorize!" do
-    subject(:authorize!) { legalized_object.authorize!(**options) }
+  describe "#law" do
+    subject(:law) { legalized_object.law(object, petitioner, **options) }
 
-    let(:options) { Hash[*Faker::Lorem.words(2 * rand(1..2))].symbolize_keys }
+    let(:object) { nil }
+    let(:petitioner) { nil }
+    let(:input_permissions) { nil }
+    let(:input_params) { nil }
+    let(:input_law_class) { nil }
+    let(:options) do
+      { permissions: input_permissions, parameters: input_params, law_class: input_law_class }
+    end
 
-    before { allow(legalized_object).to receive(:authorize).with(**options).and_return(authorized?) }
-
-    context "when unauthorized" do
-      let(:authorized?) { false }
-
+    shared_examples_for "no law provided" do
       it "raises" do
-        expect { authorize! }.to raise_error Law::NotAuthorizedError
+        expect { law }.to raise_error ArgumentError, "a Law is required"
       end
     end
 
-    context "when authorized" do
-      let(:authorized?) { true }
+    shared_examples_for "a law" do
+      let(:law_class) { Class.new }
+      let(:permissions) { [] }
+      let(:source) { nil }
+      let(:target) { nil }
+      let(:params) { {} }
 
-      it { is_expected.to eq true }
+      it { is_expected.to be_an_instance_of law_class }
+      it { is_expected.to have_attributes(permissions: permissions, source: source, target: target, params: params) }
+    end
+
+    shared_context "with example model" do
+      let(:example_model_class) { Class.new }
+      let(:example_model_name) do
+        Array.new(2) { Faker::Internet.domain_word }.join("_").camelize
+      end
+
+      before { stub_const(example_model_name, example_model_class) }
+    end
+
+    shared_context "with example model and law" do
+      include_context "with example model"
+
+      let(:example_law_name) { "#{example_model_name}Law" }
+      let(:example_law_class) { Class.new(Law::LawBase) }
+
+      before { stub_const(example_law_name, example_law_class) }
+    end
+
+    context "with no arguments" do
+      subject(:law) { legalized_object.law }
+
+      it_behaves_like "no law provided"
+    end
+
+    context "with law_class" do
+      let(:input_law_class) { Class.new(Law::LawBase) }
+
+      context "with permissions" do
+        let(:input_permissions) do
+          Array.new(2) { Faker::Internet.domain_word }.map(&:to_sym)
+        end
+
+        it_behaves_like "a law" do
+          let(:law_class) { input_law_class }
+          let(:permissions) { input_permissions }
+        end
+      end
+
+      context "without permissions" do
+        context "without petitioner" do
+          context "without current_user" do
+            it_behaves_like "a law" do
+              let(:law_class) { input_law_class }
+            end
+          end
+
+          context "with current_user" do
+            before { allow(legalized_object).to receive(:current_user).and_return(current_user) }
+
+            context "without permissions" do
+              let(:current_user) { double }
+
+              it_behaves_like "a law" do
+                let(:law_class) { input_law_class }
+                let(:source) { current_user }
+              end
+            end
+
+            context "with permissions" do
+              let(:current_user) { double(permissions: current_user_permissions) }
+              let(:current_user_permissions) do
+                Array.new(2) { Faker::Internet.domain_word }.map(&:to_sym)
+              end
+
+              it_behaves_like "a law" do
+                let(:law_class) { input_law_class }
+                let(:source) { current_user }
+                let(:permissions) { current_user_permissions }
+              end
+            end
+          end
+        end
+
+        context "with petitioner" do
+          context "without permissions" do
+            let(:petitioner) { double }
+
+            it_behaves_like "a law" do
+              let(:law_class) { input_law_class }
+              let(:source) { petitioner }
+            end
+          end
+
+          context "with permissions" do
+            let(:petitioner) { double(permissions: petitioner_permissions) }
+            let(:petitioner_permissions) do
+              Array.new(2) { Faker::Internet.domain_word }.map(&:to_sym)
+            end
+
+            it_behaves_like "a law" do
+              let(:law_class) { input_law_class }
+              let(:source) { petitioner }
+              let(:permissions) { petitioner_permissions }
+            end
+          end
+        end
+      end
+    end
+
+    context "when law_class implied" do
+      include_context "with example model and law"
+
+      context "without object" do
+        context "without controller_name" do
+          it_behaves_like "no law provided"
+        end
+
+        context "with controller_name" do
+          let(:controller_name) { example_model_class.name.underscore.pluralize }
+
+          before { allow(legalized_object).to receive(:controller_name).and_return(controller_name) }
+
+          it_behaves_like "a law" do
+            let(:target) { example_model_class }
+            let(:law_class) { example_law_class }
+          end
+        end
+      end
+
+      context "with object" do
+        context "when model instance" do
+          let(:object) { example_model_class.new }
+
+          it_behaves_like "a law" do
+            let(:law_class) { example_law_class }
+            let(:target) { object }
+          end
+        end
+
+        context "when model class" do
+          let(:object) { example_model_class }
+
+          it_behaves_like "a law" do
+            let(:law_class) { example_law_class }
+            let(:target) { object }
+          end
+        end
+
+        context "when model name" do
+          let(:object) { example_model_class.name }
+
+          it_behaves_like "a law" do
+            let(:law_class) { example_law_class }
+            let(:target) { object }
+          end
+        end
+
+        context "when symbol representing model name" do
+          let(:object) { example_model_class.name.underscore.to_sym }
+
+          it_behaves_like "a law" do
+            let(:law_class) { example_law_class }
+            let(:target) { object }
+          end
+        end
+      end
     end
   end
 
   describe "#authorize" do
-    subject(:authorize) { legalized_object.authorize(**options) }
-
-    let(:options) do
-      { object: input_object,
-        law_class: input_law_class,
-        action: input_action,
-        petitioner: input_petitioner,
-        permissions: input_permissions,
-        params: input_params }
-    end
-
-    let(:law_class) { nil }
-    let(:action) { nil }
-    let(:permissions) { nil }
-    let(:source) { nil }
-    let(:target) { nil }
-    let(:params) { nil }
-
-    before do
-      allow(legalized_object).
-        to receive(:legal?).
-        with(law_class, action, permissions, source, target, params).
-        and_return(legal?)
-    end
-
-    shared_examples_for "a judged petition" do
-      context "when illegal" do
-        let(:legal?) { false }
-
-        it { is_expected.to eq false }
-      end
-
-      context "when legal" do
-        let(:legal?) { true }
-
-        it { is_expected.to eq true }
-      end
-    end
-
-    context "without input" do
-      let(:input_object) { nil }
-      let(:input_law_class) { nil }
-      let(:input_action) { nil }
-      let(:input_petitioner) { nil }
-      let(:input_permissions) { nil }
-      let(:input_params) { nil }
-
-      context "with controller_name" do
-        let(:object_name) { Faker::Lorem.words(2).join("_").camelize }
-        let(:controller_name) { object_name.underscore.pluralize }
-
-        before do
-          stub_const(object_name, target)
-          allow(legalized_object).to receive(:controller_name).and_return(controller_name)
-        end
-
-        it_behaves_like "a judged petition" do
-          let(:target) { Class.new }
-        end
-      end
-
-      context "with findable law" do
-        let(:input_object) { object_class.new }
-
-        let(:object_class) { Class.new }
-
-        let(:object_name) { Faker::Lorem.words(2).join("_").camelize }
-        let(:law_name) { "#{object_name}Law" }
-
-        before do
-          stub_const(object_name, object_class)
-          stub_const(law_name, law_class)
-        end
-
-        it_behaves_like "a judged petition" do
-          let(:target) { input_object }
-          let(:law_class) { Class.new }
-        end
-      end
-
-      context "with action_name" do
-        let(:action_name) { Faker::Lorem.words(2).join("_") }
-
-        before { allow(legalized_object).to receive(:action_name).and_return(action_name) }
-
-        it_behaves_like "a judged petition" do
-          let(:action) { action_name }
-        end
-      end
-
-      context "with current_user" do
-        let(:current_user) { double }
-
-        before { allow(legalized_object).to receive(:current_user).and_return(current_user) }
-
-        it_behaves_like "a judged petition" do
-          let(:source) { current_user }
-        end
-      end
-
-      context "with petitioner permissions" do
-        let(:input_petitioner) { double(permissions: permissions) }
-
-        it_behaves_like "a judged petition" do
-          let(:source) { input_petitioner }
-          let(:permissions) { [ Faker::Internet.domain_word.to_sym ] }
-        end
-      end
-
-      context "with params" do
-        let(:object_params) { double }
-
-        before { allow(legalized_object).to receive(:params).and_return(object_params) }
-
-        it_behaves_like "a judged petition" do
-          let(:params) { object_params }
-        end
-      end
-
-      context "with nothing" do
-        it_behaves_like "a judged petition"
-      end
-    end
-
-    context "with input" do
-      let(:input_object) { double }
-      let(:input_law_class) { double }
-      let(:input_action) { double }
-      let(:input_petitioner) { double }
-      let(:input_permissions) { double }
-      let(:input_params) { double }
-
-      let(:law_class) { input_law_class }
-      let(:action) { input_action }
-      let(:permissions) { input_permissions }
-      let(:source) { input_petitioner }
-      let(:target) { input_object }
-      let(:params) { input_params }
-
-      it_behaves_like "a judged petition"
-    end
-  end
-
-  describe "#legal?" do
-    subject(:legal?) { legalized_object.legal?(law_class, action, permissions, source, target, params) }
+    subject(:authorize) { legalized_object.authorize(action, **options) }
 
     let(:action) { Faker::Internet.domain_word }
-    let(:permissions) { double }
-    let(:source) { double }
-    let(:target) { double }
-    let(:params) { double }
-    let(:statute) { Class.new(Law::StatuteBase) }
-    let(:law_class) do
-      Class.new(Law::LawBase).tap { |klass| klass.__send__(:default_statute, statute) }
+    let(:input_object) { double }
+    let(:input_petitioner) { double }
+    let(:input_permissions) { double }
+    let(:input_parameters) { double }
+    let(:input_law_class) { double }
+    let(:law) { instance_double(Law::LawBase) }
+    let(:judgement) { instance_double(Law::Judgement) }
+    let(:authorized?) { rand(1..2) % 2 == 0 }
+    let(:options) do
+      { object: input_object,
+        petitioner: input_petitioner,
+        permissions: input_permissions,
+        parameters: input_parameters,
+        law_class: input_law_class }
     end
 
-    context "without law_class" do
-      let(:law_class) { nil }
+    before do
+      allow(legalized_object).to receive(:law).and_return(law)
+      allow(legalized_object).to receive(:authorized?).and_return(authorized?)
+      allow(law).to receive(:authorize).with(action).and_return(judgement)
+    end
 
-      it "raises" do
-        expect { legal? }.to raise_error ArgumentError, "a Law is required"
+    shared_examples_for "an authorized law" do
+      let(:object) { input_object }
+      let(:petitioner) { input_petitioner }
+      let(:permissions) { input_permissions }
+      let(:parameters) { input_parameters }
+      let(:law_class) { input_law_class }
+
+      it { is_expected.to eq authorized? }
+
+      it "makes a legal judgement" do
+        expect { authorize }.to change { legalized_object.judgement }.from(nil).to(judgement)
+
+        expect(legalized_object).
+        to have_received(:law).
+        with(object, petitioner, permissions: permissions, parameters: parameters, law_class: law_class)
+      end
+    end
+
+    context "with action" do
+      context "without input parameters" do
+        let(:input_parameters) { nil }
+
+        context "without params" do
+          it_behaves_like "an authorized law"
+        end
+
+        context "with params" do
+          let(:params) { Faker::Lorem.words(2).map(&:to_sym) }
+
+          before { allow(legalized_object).to receive(:params).and_return(params) }
+
+          it_behaves_like "an authorized law" do
+            let(:parameters) { params }
+          end
+        end
+      end
+
+      context "with input parameters" do
+        it_behaves_like "an authorized law"
       end
     end
 
     context "without action" do
       let(:action) { nil }
 
-      it "raises" do
-        expect { legal? }.to raise_error ArgumentError, "an action is required"
-      end
-    end
-
-    context "with arguments" do
-      it "makes a judgement" do
-        expect { legal? }.
-          to change { legalized_object.law }.from(nil).to(an_instance_of(law_class)).
-          and change { legalized_object.judgement }.from(nil).to(an_instance_of(Law::Judgement)).
-          and change { legalized_object.adjudicated? }.from(false).to(true).
-          and change { legalized_object.authorized? }.from(false).to(true)
+      context "without action_name" do
+        it "raises" do
+          expect { authorize }.to raise_error ArgumentError, "an action is required"
+        end
       end
 
-      it "has law attributes" do
-        legal?
-        expect(legalized_object.law).
-          to have_attributes(permissions: permissions, source: source, target: target, params: params)
+      context "with params" do
+        let(:action_name) { Faker::Lorem.words(2).map(&:to_sym) }
+
+        before { allow(legalized_object).to receive(:action_name).and_return(action_name) }
+
+        it_behaves_like "an authorized law" do
+          let(:action) { action_name }
+        end
       end
     end
   end
