@@ -18,6 +18,8 @@ require "law/judgement"
 
 require "law/law_base"
 
+require "law/legalize"
+
 module Law
   class Error < StandardError; end
 
