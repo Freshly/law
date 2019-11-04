@@ -152,9 +152,7 @@ RSpec.describe Law::Legalize, type: :concern do
 
     shared_context "with example model" do
       let(:example_model_class) { Class.new }
-      let(:example_model_name) do
-        Array.new(2) { Faker::Internet.domain_word }.join("_").camelize
-      end
+      let(:example_model_name) { "FooBar" }
 
       before { stub_const(example_model_name, example_model_class) }
     end
