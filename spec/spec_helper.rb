@@ -16,7 +16,7 @@ end
 
 require "law"
 
-require_relative "../lib/spec_helper"
+require_relative "../lib/law/spec_helper"
 
 require_relative "support/shared_context/with_an_example_law"
 require_relative "support/shared_context/with_an_example_petition"

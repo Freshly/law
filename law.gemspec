@@ -11,8 +11,13 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "Give illegal operations a whole new meaning with this policy enforcement"
   spec.description   = "Enforce the laws of your Rails application with highly extensible access policies"
-  spec.homepage      = "https://www.freshly.com/"
+  spec.homepage      = "https://github.com/Freshly/law/tree/master"
   spec.license       = "MIT"
+
+
+  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = spec.homepage
+  spec.metadata["changelog_uri"] = "https://github.com/Freshly/law/blob/master/CHANGELOG.md"
 
   spec.files         = Dir["README.md", "LICENSE.txt", "lib/**/{*,.[a-z]*}"]
   spec.require_paths = "lib"
