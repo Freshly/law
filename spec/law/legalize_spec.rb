@@ -140,7 +140,7 @@ RSpec.describe Law::Legalize, type: :concern do
     end
 
     shared_examples_for "a law" do
-      let(:law_class) { Class.new }
+      let(:law_class) { Class.new(Law::LawBase) }
       let(:permissions) { [] }
       let(:source) { nil }
       let(:target) { nil }
