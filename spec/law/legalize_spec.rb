@@ -140,7 +140,7 @@ RSpec.describe Law::Legalize, type: :concern do
     end
 
     shared_examples_for "a law" do
-      let(:law_class) { Class.new }
+      let(:law_class) { Class.new(Law::LawBase) }
       let(:permissions) { [] }
       let(:source) { nil }
       let(:target) { nil }
@@ -153,9 +153,7 @@ RSpec.describe Law::Legalize, type: :concern do
     shared_context "with example model" do
       let(:example_model_name) { "FooBar" }
       let(:example_model_class) do
-        Class.new do
-          include Spicerack::Conjugatable
-        end
+        Class.new.tap { |klass| klass.include Conjunction::Conjunctive }
       end
 
       before { stub_const(example_model_name, example_model_class) }
