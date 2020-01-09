@@ -151,8 +151,10 @@ RSpec.describe Law::Legalize, type: :concern do
     end
 
     shared_context "with example model" do
-      let(:example_model_class) { Class.new }
       let(:example_model_name) { "FooBar" }
+      let(:example_model_class) do
+        Class.new.tap { |klass| klass.include Conjunction::Conjunctive }
+      end
 
       before { stub_const(example_model_name, example_model_class) }
     end
@@ -289,19 +291,13 @@ RSpec.describe Law::Legalize, type: :concern do
         context "when model name" do
           let(:object) { example_model_class.name }
 
-          it_behaves_like "a law" do
-            let(:law_class) { example_law_class }
-            let(:target) { object }
-          end
+          it_behaves_like "no law provided"
         end
 
         context "when symbol representing model name" do
           let(:object) { example_model_class.name.underscore.to_sym }
 
-          it_behaves_like "a law" do
-            let(:law_class) { example_law_class }
-            let(:target) { object }
-          end
+          it_behaves_like "no law provided"
         end
       end
     end

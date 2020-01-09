@@ -26,7 +26,7 @@ module Law
       object ||= try(:controller_name)&.singularize&.camelize&.safe_constantize
       petitioner ||= try(:current_user)
       permissions ||= petitioner.try(:permissions)
-      law_class ||= law_finder.class_for(object)
+      law_class ||= object.try(:conjugate, Law::LawBase)
 
       raise ArgumentError, "a Law is required" unless law_class.is_a?(Class)
 
@@ -46,12 +46,6 @@ module Law
       options = { permissions: permissions, parameters: parameters, law_class: law_class }
       @judgement = law(object, petitioner, **options).authorize(action)
       authorized?
-    end
-
-    private
-
-    def law_finder
-      @law_finder ||= Spicerack::ClassFinder.new("Law")
     end
   end
 end

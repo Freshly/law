@@ -8,6 +8,9 @@ require_relative "laws/judgements"
 # A **Law** defines which **Statutes** are enforced against specifics **Actions**.
 module Law
   class LawBase < Spicerack::InputObject
+    include Conjunction::Junction
+    suffixed_with "Law"
+
     include Law::Laws::Judgements
     include Law::Laws::Actions
     include Law::Laws::Statutes
