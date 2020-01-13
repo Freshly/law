@@ -7,12 +7,11 @@ Enforce the laws of your Rails application with highly extensible access policie
 [![Maintainability](https://api.codeclimate.com/v1/badges/c5667b201773ea79ff5e/maintainability)](https://codeclimate.com/github/Freshly/law/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/c5667b201773ea79ff5e/test_coverage)](https://codeclimate.com/github/Freshly/law/test_coverage)
 
-* [Law](#law)
-  * [Installation](#installation)
-  * [Usage](#usage)
-  * [Development](#development)
-  * [Contributing](#contributing)
-  * [License](#license)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Development](#development)
+* [Contributing](#contributing)
+* [License](#license)
 
 ## Installation
 
