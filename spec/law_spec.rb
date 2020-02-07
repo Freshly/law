@@ -1,9 +1,23 @@
+# frozen_string_literal: true
+
 RSpec.describe Law do
   it "has a version number" do
-    expect(Law::VERSION).not_to be nil
+    expect(Law::VERSION).not_to be_nil
   end
 
-  it "does something useful" do
-    expect(false).to eq(true)
+  describe described_class::Error do
+    it { is_expected.to inherit_from StandardError }
+  end
+
+  describe described_class::AlreadyJudgedError do
+    it { is_expected.to inherit_from Law::Error }
+  end
+
+  describe described_class::NotAuthorizedError do
+    it { is_expected.to inherit_from Law::Error }
+  end
+
+  describe described_class::InjunctionError do
+    it { is_expected.to inherit_from Law::NotAuthorizedError }
   end
 end
