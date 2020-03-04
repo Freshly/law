@@ -96,7 +96,7 @@ RSpec.describe Law::Laws::Actions, type: :concern do
       end
 
       let(:expected_attribute_value) do
-        expected_property_value.each_with_object({}) do |action, hash|
+        expected_property_value.each_with_object(HashWithIndifferentAccess.new) do |action, hash|
           hash[action] = nil
         end
       end
