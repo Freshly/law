@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.4
+
+*Release Date*: 3/3/2020
+
+- Revoked Actions
+
 ## v0.1.3
 
 *Release Date*: 3/3/2020
