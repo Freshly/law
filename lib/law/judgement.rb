@@ -28,7 +28,7 @@ module Law
     end
 
     def authorized?
-      violations.blank?
+      adjudicated? && violations.blank?
     end
 
     def judge
