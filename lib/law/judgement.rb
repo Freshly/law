@@ -15,7 +15,7 @@ module Law
 
     attr_reader :petition, :violations, :applied_regulations
 
-    delegate :statute, :applicable_regulations, to: :petition, allow_nil: true
+    delegate :statute, :applicable_regulations, :compliant?, to: :petition, allow_nil: true
 
     def initialize(petition)
       @petition = petition
@@ -39,20 +39,30 @@ module Law
     end
 
     def judge!
+      raise AlreadyJudgedError if adjudicated?
+
       if statute&.unregulated?
         @applied_regulations = [ nil ]
         return true
       end
 
-      raise InjunctionError if applicable_regulations.blank?
-      raise AlreadyJudgedError if adjudicated?
-
-      @applied_regulations = applicable_regulations.map { |regulation| regulation.new(petition: petition) }
-      @violations = applied_regulations.reject(&:valid?)
-
-      raise NotAuthorizedError unless authorized?
+      ensure_jurisdiction
+      reckon!
 
       true
+    end
+
+    private
+
+    def ensure_jurisdiction
+      raise InjunctionError if applicable_regulations.blank?
+      raise ComplianceError unless compliant?
+    end
+
+    def reckon!
+      @applied_regulations = applicable_regulations.map { |regulation| regulation.new(petition: petition) }
+      @violations = applied_regulations.reject(&:valid?)
+      raise NotAuthorizedError unless authorized?
     end
   end
 end

@@ -2,6 +2,7 @@
 
 require "active_support"
 require "active_support/core_ext/enumerable"
+require "active_support/hash_with_indifferent_access"
 
 require "spicery"
 
@@ -27,4 +28,5 @@ module Law
 
   class NotAuthorizedError < Error; end
   class InjunctionError < NotAuthorizedError; end
+  class ComplianceError < NotAuthorizedError; end
 end

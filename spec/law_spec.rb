@@ -20,4 +20,8 @@ RSpec.describe Law do
   describe described_class::InjunctionError do
     it { is_expected.to inherit_from Law::NotAuthorizedError }
   end
+
+  describe described_class::ComplianceError do
+    it { is_expected.to inherit_from Law::NotAuthorizedError }
+  end
 end
