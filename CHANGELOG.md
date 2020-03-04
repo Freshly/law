@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.3
+
+*Release Date*: 3/3/2020
+
+- HashWithIndifferentAccess fix
+
 ## v0.1.2
 
 *Release Date*: 3/3/2020

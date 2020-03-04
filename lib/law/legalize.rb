@@ -33,8 +33,8 @@ module Law
       law_class.new(permissions: permissions, source: petitioner, target: object, params: parameters)
     end
 
-    def authorize!(**options)
-      authorize(**options) or raise Law::NotAuthorizedError
+    def authorize!(action = nil, **options)
+      authorize(action, **options) or raise Law::NotAuthorizedError
     end
 
     def authorize(action = nil, object: nil, petitioner: nil, permissions: nil, parameters: nil, law_class: nil)
