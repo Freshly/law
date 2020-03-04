@@ -11,6 +11,7 @@ RSpec.describe Law::Judgement, type: :judgement do
 
   it { is_expected.to delegate_method(:statute).to(:petition) }
   it { is_expected.to delegate_method(:applicable_regulations).to(:petition) }
+  it { is_expected.to delegate_method(:compliant?).to(:petition) }
 
   describe "#authorized?" do
     subject { example_judgement }
@@ -96,9 +97,13 @@ RSpec.describe Law::Judgement, type: :judgement do
     subject(:judge!) { example_judgement.judge! }
 
     context "with a petition" do
-      before { allow(petition).to receive(:applicable_regulations).and_return(applicable_regulations) }
+      before do
+        allow(petition).to receive(:applicable_regulations).and_return(applicable_regulations)
+        allow(petition).to receive(:compliant?).and_return(compliant?)
+      end
 
       let(:applicable_regulations) { [] }
+      let(:compliant?) { true }
 
       context "when unregulated" do
         let(:unregulated?) { true }
@@ -133,18 +138,38 @@ RSpec.describe Law::Judgement, type: :judgement do
           end
 
           shared_examples_for "regulations are applied" do
-            it "changes applied_regulations" do
-              expect { judge! }.
-              to change { example_judgement.applied_regulations }.from([]).to(expected_applied_regulations)
+            context "when not compliant?" do
+              let(:compliant?) { false }
+
+              it "has raises" do
+                expect { judge! }.to raise_error Law::ComplianceError
+              end
+            end
+
+            context "when compliant?" do
+              it "changes applied_regulations" do
+                expect { judge! }.
+                  to change { example_judgement.applied_regulations }.from([]).to(expected_applied_regulations)
+              end
             end
           end
 
           shared_examples_for "violations are tracked" do
-            it "has violations" do
-              expect { judge! }.
-              to change { example_judgement.applied_regulations }.from([]).to(expected_applied_regulations).
-              and change { example_judgement.violations }.from([]).to(expected_violations).
-              and raise_error Law::NotAuthorizedError
+            context "when not compliant?" do
+              let(:compliant?) { false }
+
+              it "has raises" do
+                expect { judge! }.to raise_error Law::ComplianceError
+              end
+            end
+
+            context "when compliant?" do
+              it "has violations" do
+                expect { judge! }.
+                  to change { example_judgement.applied_regulations }.from([]).to(expected_applied_regulations).
+                  and change { example_judgement.violations }.from([]).to(expected_violations).
+                  and raise_error Law::NotAuthorizedError
+              end
             end
           end
 
@@ -157,7 +182,7 @@ RSpec.describe Law::Judgement, type: :judgement do
             it_behaves_like "regulations are applied"
           end
 
-          context "when one regulations are invalid" do
+          context "when one regulations is invalid" do
             let(:regulation0_valid?) { true }
             let(:regulation1_valid?) { false }
             let(:expected_violations) { [ regulation1_instance ] }

@@ -59,4 +59,50 @@ RSpec.describe Law::Petition, type: :petition do
       it { is_expected.to eq [ regulation0, regulation1 ] }
     end
   end
+
+  describe "#compliant?" do
+    subject(:actor) { example_petition.compliant? }
+
+    context "with full_compliance_required" do
+      before { statute0.__send__(:require_full_compliance) }
+
+      context "with nothing" do
+        let(:example_petition) { described_class.new(statute: statute0) }
+
+        it { is_expected.to eq false }
+      end
+
+      context "with partial overlap" do
+        let(:permissions) { regulation1.key }
+
+        it { is_expected.to eq false }
+      end
+
+      context "with full overlap" do
+        let(:permissions) { [ regulation0.key, regulation1.key ] }
+
+        it { is_expected.to eq true }
+      end
+    end
+
+    context "without full_compliance_required" do
+      context "with nothing" do
+        let(:example_petition) { described_class.new(statute: statute0) }
+
+        it { is_expected.to eq false }
+      end
+
+      context "with partial overlap" do
+        let(:permissions) { regulation1.key }
+
+        it { is_expected.to eq true }
+      end
+
+      context "with full overlap" do
+        let(:permissions) { [ regulation0.key, regulation1.key ] }
+
+        it { is_expected.to eq true }
+      end
+    end
+  end
 end
