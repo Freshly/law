@@ -7,7 +7,7 @@ module Law
       extend ActiveSupport::Concern
 
       included do
-        class_attribute :actions, instance_writer: false, default: {}
+        class_attribute :actions, instance_writer: false, default: HashWithIndifferentAccess.new
 
         delegate :statute_for_action?, to: :class
       end
