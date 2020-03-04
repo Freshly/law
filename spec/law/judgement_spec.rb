@@ -15,14 +15,24 @@ RSpec.describe Law::Judgement, type: :judgement do
   describe "#authorized?" do
     subject { example_judgement }
 
-    context "without violations" do
-      it { is_expected.to be_authorized }
+    context "without applied_regulations" do
+      it { is_expected.not_to be_authorized }
     end
 
-    context "with violations" do
-      before { allow(example_judgement).to receive(:violations).and_return([ instance_double(Law::RegulationBase) ]) }
+    context "with applied_regulations" do
+      before do
+        allow(example_judgement).to receive(:applied_regulations).and_return([instance_double(Law::RegulationBase)])
+      end
 
-      it { is_expected.not_to be_authorized }
+      context "without violations" do
+        it { is_expected.to be_authorized }
+      end
+
+      context "with violations" do
+        before { allow(example_judgement).to receive(:violations).and_return([ instance_double(Law::RegulationBase) ]) }
+
+        it { is_expected.not_to be_authorized }
+      end
     end
   end
 
