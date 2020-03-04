@@ -14,6 +14,8 @@ module Law
       end
 
       def petition_for_action(action)
+        return if revoked_action?(action)
+
         Law::Petition.new(
           statute: actions[action] || _default_statute,
           source: source,

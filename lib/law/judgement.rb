@@ -15,7 +15,7 @@ module Law
 
     attr_reader :petition, :violations, :applied_regulations
 
-    delegate :statute, :applicable_regulations, to: :petition
+    delegate :statute, :applicable_regulations, to: :petition, allow_nil: true
 
     def initialize(petition)
       @petition = petition
@@ -39,7 +39,7 @@ module Law
     end
 
     def judge!
-      if statute.unregulated?
+      if statute&.unregulated?
         @applied_regulations = [ nil ]
         return true
       end

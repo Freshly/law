@@ -8,14 +8,20 @@ module Law
 
       included do
         class_attribute :actions, instance_writer: false, default: HashWithIndifferentAccess.new
+        class_attribute :revoked_actions, instance_writer: false, default: HashWithIndifferentAccess.new
 
-        delegate :statute_for_action?, to: :class
+        delegate :statute_for_action?, :revoked_action?, to: :class
       end
 
       class_methods do
         def inherited(base)
           base.actions = actions.dup
+          base.revoked_actions = revoked_actions.dup
           super
+        end
+
+        def revoked_action?(action)
+          revoked_actions[action].present?
         end
 
         def statute_for_action?(action)
@@ -23,6 +29,10 @@ module Law
         end
 
         private
+
+        def revoke_action(*input_actions)
+          input_actions.each { |action| revoked_actions[action] = true }
+        end
 
         def define_action(*input_actions, enforces: nil)
           raise ArgumentError, "invalid statute: #{enforces}" unless enforceable?(enforces)

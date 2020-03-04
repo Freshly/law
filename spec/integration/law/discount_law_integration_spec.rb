@@ -127,6 +127,17 @@ RSpec.describe DiscountLaw, type: :integration do
     it_behaves_like "CreateDiscountRegulation is enforced"
   end
 
+  shared_examples_for "a revoked action" do
+    it_behaves_like "an adjudicated law" do
+      let(:guest?) { false }
+      let(:user?) { false }
+      let(:admin?) { false }
+      let(:marketing_manager?) { false }
+      let(:marketing_executive?) { false }
+      let(:super_admin?) { false }
+    end
+  end
+
   shared_examples_for "AdminRegulation is enforced" do
     it_behaves_like "an adjudicated law" do
       let(:guest?) { false }
@@ -153,13 +164,13 @@ RSpec.describe DiscountLaw, type: :integration do
   describe ".edit?" do
     subject { described_class.edit?(permissions: permissions, params: params) }
 
-    it_behaves_like "AdminRegulation is enforced"
+    it_behaves_like "a revoked action"
   end
 
   describe ".update?" do
     subject { described_class.update?(permissions: permissions, params: params) }
 
-    it_behaves_like "AdminRegulation is enforced"
+    it_behaves_like "a revoked action"
   end
 
   describe ".destroy?" do
@@ -183,13 +194,13 @@ RSpec.describe DiscountLaw, type: :integration do
   describe "#edit?" do
     subject { discount_law.edit? }
 
-    it_behaves_like "AdminRegulation is enforced"
+    it_behaves_like "a revoked action"
   end
 
   describe "#update?" do
     subject { discount_law.update? }
 
-    it_behaves_like "AdminRegulation is enforced"
+    it_behaves_like "a revoked action"
   end
 
   describe "#destroy?" do
