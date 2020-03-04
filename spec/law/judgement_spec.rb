@@ -16,7 +16,7 @@ RSpec.describe Law::Judgement, type: :judgement do
     subject { example_judgement }
 
     context "without applied_regulations" do
-      it { is_expected.to be_authorized }
+      it { is_expected.not_to be_authorized }
     end
 
     context "with applied_regulations" do
