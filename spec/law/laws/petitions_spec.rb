@@ -18,6 +18,15 @@ RSpec.describe Law::Laws::Petitions, type: :concern do
       { statute: statute, source: source, permissions: permissions, target: target, params: params }
     end
 
+    context "when revoked" do
+      before do
+        example_law_class.__send__(:define_action, action, enforces: statute)
+        example_law_class.__send__(:revoke_action, action)
+      end
+
+      it { is_expected.to be_nil }
+    end
+
     context "when defined" do
       before { example_law_class.__send__(:define_action, action, enforces: statute) }
 

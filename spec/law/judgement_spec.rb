@@ -95,82 +95,92 @@ RSpec.describe Law::Judgement, type: :judgement do
   describe "#judge!" do
     subject(:judge!) { example_judgement.judge! }
 
-    before { allow(petition).to receive(:applicable_regulations).and_return(applicable_regulations) }
+    context "with a petition" do
+      before { allow(petition).to receive(:applicable_regulations).and_return(applicable_regulations) }
 
-    let(:applicable_regulations) { [] }
+      let(:applicable_regulations) { [] }
 
-    context "when unregulated" do
-      let(:unregulated?) { true }
+      context "when unregulated" do
+        let(:unregulated?) { true }
 
-      it { is_expected.to eq true }
-    end
-
-    context "when regulated" do
-      let(:unregulated?) { false }
-
-      context "without applicable regulations" do
-        it "raises" do
-          expect { judge! }.to raise_error Law::InjunctionError
-        end
+        it { is_expected.to eq true }
       end
 
-      context "with applicable regulations" do
-        let(:applicable_regulations) { [ regulation0_class, regulation1_class ] }
+      context "when regulated" do
+        let(:unregulated?) { false }
 
-        let(:regulation0_class) { Class.new(Law::RegulationBase) }
-        let(:regulation0_instance) { instance_double(regulation0_class, valid?: regulation0_valid?) }
-
-        let(:regulation1_class) { Class.new(Law::RegulationBase) }
-        let(:regulation1_instance) { instance_double(regulation1_class, valid?: regulation1_valid?) }
-
-        let(:expected_applied_regulations) { [ regulation0_instance, regulation1_instance ] }
-        let(:expected_violations) { [] }
-
-        before do
-          allow(regulation0_class).to receive(:new).with(petition: petition).and_return(regulation0_instance)
-          allow(regulation1_class).to receive(:new).with(petition: petition).and_return(regulation1_instance)
-        end
-
-        shared_examples_for "regulations are applied" do
-          it "changes applied_regulations" do
-            expect { judge! }.
-              to change { example_judgement.applied_regulations }.from([]).to(expected_applied_regulations)
+        context "without applicable regulations" do
+          it "raises" do
+            expect { judge! }.to raise_error Law::InjunctionError
           end
         end
 
-        shared_examples_for "violations are tracked" do
-          it "has violations" do
-            expect { judge! }.
+        context "with applicable regulations" do
+          let(:applicable_regulations) { [ regulation0_class, regulation1_class ] }
+
+          let(:regulation0_class) { Class.new(Law::RegulationBase) }
+          let(:regulation0_instance) { instance_double(regulation0_class, valid?: regulation0_valid?) }
+
+          let(:regulation1_class) { Class.new(Law::RegulationBase) }
+          let(:regulation1_instance) { instance_double(regulation1_class, valid?: regulation1_valid?) }
+
+          let(:expected_applied_regulations) { [ regulation0_instance, regulation1_instance ] }
+          let(:expected_violations) { [] }
+
+          before do
+            allow(regulation0_class).to receive(:new).with(petition: petition).and_return(regulation0_instance)
+            allow(regulation1_class).to receive(:new).with(petition: petition).and_return(regulation1_instance)
+          end
+
+          shared_examples_for "regulations are applied" do
+            it "changes applied_regulations" do
+              expect { judge! }.
+              to change { example_judgement.applied_regulations }.from([]).to(expected_applied_regulations)
+            end
+          end
+
+          shared_examples_for "violations are tracked" do
+            it "has violations" do
+              expect { judge! }.
               to change { example_judgement.applied_regulations }.from([]).to(expected_applied_regulations).
               and change { example_judgement.violations }.from([]).to(expected_violations).
               and raise_error Law::NotAuthorizedError
+            end
+          end
+
+          context "when no regulations are invalid" do
+            let(:regulation0_valid?) { true }
+            let(:regulation1_valid?) { true }
+
+            it { is_expected.to eq true }
+
+            it_behaves_like "regulations are applied"
+          end
+
+          context "when one regulations are invalid" do
+            let(:regulation0_valid?) { true }
+            let(:regulation1_valid?) { false }
+            let(:expected_violations) { [ regulation1_instance ] }
+
+            it_behaves_like "violations are tracked"
+          end
+
+          context "when many regulations are invalid" do
+            let(:regulation0_valid?) { false }
+            let(:regulation1_valid?) { false }
+            let(:expected_violations) { [ regulation0_instance, regulation1_instance ] }
+
+            it_behaves_like "violations are tracked"
           end
         end
+      end
+    end
 
-        context "when no regulations are invalid" do
-          let(:regulation0_valid?) { true }
-          let(:regulation1_valid?) { true }
+    context "without a petition" do
+      let(:petition) { nil }
 
-          it { is_expected.to eq true }
-
-          it_behaves_like "regulations are applied"
-        end
-
-        context "when one regulations are invalid" do
-          let(:regulation0_valid?) { true }
-          let(:regulation1_valid?) { false }
-          let(:expected_violations) { [ regulation1_instance ] }
-
-          it_behaves_like "violations are tracked"
-        end
-
-        context "when many regulations are invalid" do
-          let(:regulation0_valid?) { false }
-          let(:regulation1_valid?) { false }
-          let(:expected_violations) { [ regulation0_instance, regulation1_instance ] }
-
-          it_behaves_like "violations are tracked"
-        end
+      it "raises" do
+        expect { judge! }.to raise_error Law::InjunctionError
       end
     end
   end
