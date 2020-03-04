@@ -18,5 +18,11 @@ module Law
       statute.regulations.select { |regulation| permission_list.include? regulation.key }
     end
     memoize :applicable_regulations
+
+    def compliant?
+      return applicable_regulations.any? unless statute.full_compliance_required?
+
+      statute.regulations == applicable_regulations
+    end
   end
 end

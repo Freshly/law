@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Law::Statutes::Regulations, type: :concern do
+RSpec.describe Law::Statutes::Compliance, type: :concern do
   include_context "with an example statute"
 
   it { is_expected.to delegate_method(:unregulated?).to(:class) }
