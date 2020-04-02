@@ -6,8 +6,8 @@ require "law/version"
 Gem::Specification.new do |spec|
   spec.name          = "law"
   spec.version       = Law::VERSION
-  spec.authors       = [ "Eric Garside" ]
-  spec.email         = %w[garside@gmail.com]
+  spec.authors       = [ "Eric Garside", "Brandon Trumpold" ]
+  spec.email         = %w[garside@gmail.com brandon.trumpold@gmail.com]
 
   spec.summary       = "Give illegal operations a whole new meaning with this policy enforcement"
   spec.description   = "Enforce the laws of your Rails application with highly extensible access policies"
