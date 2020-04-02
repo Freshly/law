@@ -23,7 +23,7 @@ module Law
     end
 
     def law(object = nil, petitioner = nil, permissions: nil, parameters: nil, law_class: nil)
-      object ||= try(:controller_name)&.singularize&.camelize&.safe_constantize
+      object ||= @record || try(:controller_name)&.singularize&.camelize&.safe_constantize
       petitioner ||= try(:current_user)
       permissions ||= petitioner.try(:permissions)
       law_class ||= object.try(:conjugate, Law::LawBase)

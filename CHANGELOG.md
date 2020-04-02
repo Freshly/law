@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.6
+
+*Release Date*: 4/2/2020
+
+- Added default option to Legalize
+
 ## v0.1.5
 
 *Release Date*: 3/3/2020
