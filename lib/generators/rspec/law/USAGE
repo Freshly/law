@@ -1,0 +1,9 @@
+
+Description:
+    Stub a Law test.
+
+Example:
+    `rails generate rspec:law foo`
+
+    Generates:
+      Test: spec/laws/foo_law_spec.rb

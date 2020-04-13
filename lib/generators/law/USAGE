@@ -1,0 +1,8 @@
+Description:
+    Stub a Law with a test.
+Example:
+    `rails generate law foo`
+
+    Generates:
+       Statute: app/statutes/foo_statute.rb
+       Test: spec/statutes/foo_statute_spec.rb
