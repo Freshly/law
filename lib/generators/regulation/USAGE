@@ -1,7 +1,7 @@
 Description:
     Stub a Regulation with a test.
 Example:
-    `rails generate law:regulation foo`
+    `rails generate regulation foo`
 
     Generates:
        Regulation: app/regulations/foo_regulation.rb

@@ -1,7 +1,7 @@
 Description:
     Stub a Statute with a test.
 Example:
-    `rails generate law:statute foo`
+    `rails generate statute foo`
 
     Generates:
        Statute: app/statutes/foo_statute.rb
