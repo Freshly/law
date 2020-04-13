@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Statute
+module Law
   module Generators
     class StatuteGenerator < Rails::Generators::NamedBase
       source_root File.expand_path("templates", __dir__)
