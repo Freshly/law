@@ -7,7 +7,7 @@ module Law
 
       hook_for :test_framework
 
-      def create_application_statute
+      def create_statute
         template "statute.rb.erb", File.join("app/statutes/", class_path, "#{file_name}_statute.rb")
       end
     end

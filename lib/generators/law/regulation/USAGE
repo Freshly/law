@@ -1,5 +1,6 @@
 Description:
     Stub a Regulation with a test.
+
 Example:
     `rails generate law:regulation foo`
 

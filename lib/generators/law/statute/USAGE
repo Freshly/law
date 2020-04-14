@@ -1,5 +1,6 @@
 Description:
     Stub a Statute with a test.
+
 Example:
     `rails generate law:statute foo`
 
