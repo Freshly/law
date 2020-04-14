@@ -1,0 +1,9 @@
+
+Description:
+    Stub a Statute test.
+
+Example:
+    `rails generate rspec:statute foo`
+
+    Generates:
+      Test: spec/statutes/foo_statute_spec.rb
