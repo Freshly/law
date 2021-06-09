@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    law (0.1.7)
+    law (0.1.8)
       activesupport (>= 6.0.3.7)
       spicery (>= 0.26.0.4, < 1.0)
 
