@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_context "with statutes and regulations" do
-  let(:root_name) { Faker::Internet.domain_word.capitalize }
+  let(:root_name) { Faker::Alphanumeric.alpha(number: rand(6..18)).capitalize }
 
   let(:regulation0_name) { "#{root_name}xRegulation" }
   let(:regulation1_name) { "#{root_name}yRegulation" }
