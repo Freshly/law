@@ -7,7 +7,7 @@ RSpec.shared_context "with an example regulation" do
 
   let(:petition) { instance_double(Law::Petition) }
 
-  let(:root_name) { Faker::Internet.domain_word.capitalize }
+  let(:root_name) { Faker::Alphanumeric.alpha(number: rand(6..18)).capitalize }
   let(:example_regulation_name) { "#{root_name}Regulation" }
 
   before { stub_const(example_regulation_name, example_regulation_class) }
