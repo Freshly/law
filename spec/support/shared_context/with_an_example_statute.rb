@@ -5,7 +5,7 @@ RSpec.shared_context "with an example statute" do
 
   let(:example_statute_class) { Class.new(Law::StatuteBase) }
 
-  let(:root_name) { Faker::Internet.domain_word.capitalize }
+  let(:root_name) { Faker::Alphanumeric.alpha(number: rand(6..18)).capitalize }
   let(:example_statute_name) { "#{root_name}Statute" }
 
   before { stub_const(example_statute_name, example_statute_class) }

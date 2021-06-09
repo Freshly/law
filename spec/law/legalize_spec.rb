@@ -25,7 +25,7 @@ RSpec.describe Law::Legalize, type: :concern do
     subject(:authorize!) { legalized_object.authorize!(action, **options) }
 
     let(:action) { Faker::Internet.domain_word }
-    let(:options) { Hash[*Faker::Lorem.words(2 * rand(1..2))].symbolize_keys }
+    let(:options) { Hash[*Faker::Lorem.words(number: 2 * rand(1..2))].symbolize_keys }
 
     before { allow(legalized_object).to receive(:authorize).with(action, **options).and_return(authorized?) }
 
